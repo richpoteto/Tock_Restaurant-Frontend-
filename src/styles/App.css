@@ -1,7 +1,26 @@
-@import url('https://fontlibrary.org//face/roboto');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 
 :root {
+  --darkblue: #2a2ae9;
+  --blue: #344ef4;
+  --hover-blue: #2a2ae9;
+  --inner-shadow-blue: #1e1ea2;
+  --border-white: #ececec;
+  --hover-white: #f6f6f7;
+  --inner-shadow-white: #d8d8d8;
+  --focus-outline-blue: #78a9ff;
+}
 
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+button {
+  font-family: inherit;
 }
 
 body {
@@ -9,7 +28,11 @@ body {
 }
 
 .App {
-  font-family: "Roboto", Helvetica, sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
-  font-weight: normal;
+  font-weight: 400;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
 }
+
