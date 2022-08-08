@@ -42,7 +42,7 @@ function SearchBarDateInput({ d }) {
   const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format
 
   return (
-    <label>&nbsp;Date
+    <label>Date
       <input type="date" name="date" min={dateStringNow} defaultValue={dateStringNow} />
     </label>
   );
@@ -55,7 +55,7 @@ function SearchBarHourSelect({ d }) {
   const hourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
 
   return (
-    <label>&nbsp;Time
+    <label>Time
       <select name="hour" defaultValue={currentHourNumber}>
         {hourNumbersArray.map((hour, i) => {
           return (
@@ -71,7 +71,7 @@ function SearchBarPartySizeSelect({ maxSize }) {
   const partySizeNumbersArray = Array.from(Array(Number(maxSize)), (e, i) => i + 1);
 
   return (
-    <label>&nbsp;Party Size
+    <label>Party Size
       <select defaultValue="2" name="partySize">
         {partySizeNumbersArray.map((number) => {
           return (
@@ -88,9 +88,9 @@ function RestaurantShow() {
   const restaurants = RESTAURANTS.slice(-8);
 
   return (
-    <div className="restaurant-show">
-      <h3 className="restaurant-show-header">Just Added</h3>
-      <p className="restaurant-show-subheader">New restaurants on Toock</p>
+    <div className="home-restaurant-show">
+      <h3 className="home-restaurant-show-header">Just Added</h3>
+      <p className="home-restaurant-show-subheader">New restaurants on Toock</p>
       <RestaurantShowGrid restaurants={restaurants} />
     </div>
   );
@@ -98,7 +98,7 @@ function RestaurantShow() {
 
 function RestaurantShowGrid({ restaurants }) {
   return (
-    <div className="restaurant-show-grid">
+    <div className="home-restaurant-show-grid">
       {restaurants.map((restaurant) => {
         return (
           <RestaurantCard 
@@ -113,10 +113,10 @@ function RestaurantShowGrid({ restaurants }) {
 
 function RestaurantCard({ restaurant }) {
   return (
-    <div className="restaurant-card">
-      <img className="restaurant-card-img" src={restaurant.photoURL} alt={restaurant.name} />
-      <h5 className="restaurant-card-header">{restaurant.name}</h5>
-      <p className="restaurant-card-text">{restaurant.cuisine}</p>
+    <div className="home-restaurant-card">
+      <img className="home-restaurant-card-img" src={restaurant.photoURL} alt={restaurant.name} />
+      <h5 className="home-restaurant-card-header">{restaurant.name}</h5>
+      <p className="home-restaurant-card-text">{restaurant.cuisine}</p>
     </div>
   );
 }

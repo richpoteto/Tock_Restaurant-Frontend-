@@ -65,6 +65,7 @@
 
 .search-bar label input,
 .search-bar label select {
+  margin-left: -1px;
   font-family: inherit;
   font-size: 1rem;
   font-weight: normal;
@@ -112,30 +113,30 @@
   outline-offset: 3px;
 }
 
-.restaurant-show {
+.home-restaurant-show {
   max-width: 1280px;
-  margin: 24px 24px 72px 24px;
+  margin: 32px 24px 72px 24px;
 }
 
-.restaurant-show-header {
+.home-restaurant-show-header {
   font-size: 2rem;
   font-weight: bold;
   margin: 0;
 }
 
-.restaurant-show-subheader {
+.home-restaurant-show-subheader {
   font-size: 1.2rem;
   font-weight: normal;
-  margin: 12px 0;
+  margin: 16px 0;
 }
 
-.restaurant-show-grid {
+.home-restaurant-show-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
 
-.restaurant-card {
+.home-restaurant-card {
   border: 1px solid var(--border-white);
   border-bottom: 2px solid var(--border-white);
   display: flex;
@@ -143,20 +144,20 @@
   align-items: flex-start;
 }
 
-.restaurant-card:hover {
+.home-restaurant-card:hover {
   cursor: pointer;
   border-bottom: 2px solid var(--blue);
 }
 
-.restaurant-card:hover .restaurant-card-header {
+.home-restaurant-card:hover .home-restaurant-card-header {
   color: var(--blue);
 }
 
-.restaurant-card-img {
+.home-restaurant-card-img {
   width: 100%;
 }
 
-.restaurant-card-header {
+.home-restaurant-card-header {
   font-size: 1.2rem;
   font-weight: bold;
   margin-top: 24px;
@@ -164,7 +165,7 @@
   margin-bottom: 0;
 }
 
-.restaurant-card-text {
+.home-restaurant-card-text {
   font-size: 1rem;
   font-weight: normal;
   margin: 8px 0 24px 24px;
