@@ -1,0 +1,170 @@
+.login-page {
+  width: 80%;
+  max-width: 400px;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-page-header {
+  align-self: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.partner-login-list {
+  display: flex;
+  flex-direction: column;
+  /* gap: 8px; */
+}
+
+.parter-login-btn {
+  margin: 8px 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: white;
+  color: black;
+  border: 1px solid var(--border-white);
+  box-shadow: 0 1px 1px var(--inner-shadow-white);
+  padding: 16px 30px;
+  border-radius: 32px;
+}
+
+.parter-login-btn:hover {
+  cursor: pointer;
+  background-color: var(--hover-white);
+}
+
+.parter-login-btn:focus-visible {
+  outline: 2px solid var(--focus-outline-blue);
+  outline-offset: 3px;
+}
+
+.break-line-container {
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.break-line {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  width: 100%;
+  background-color: var(--inner-shadow-white);
+  z-index: 1;
+}
+
+.break-line-container span {
+  z-index: 2;
+  background-color: white;
+  padding: 0 8px;
+  letter-spacing: 1px;
+  font-size: .9rem;
+}
+
+/* .login-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-form label {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: lighter;
+}
+
+.login-form label input {
+  border: 1px solid var(--border-white);
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: normal;
+  padding: 12px;
+}
+
+.login-form label input:focus {
+  border-color: var(--darkblue);
+  outline: none;
+}
+
+.login-form a {
+  color: var(--blue);
+  font-weight: lighter;
+  font-size: .9rem;
+}
+
+.login-form a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-form a:focus-visible {
+  outline: 2px solid var(--focus-outline-blue);
+  outline-offset: 3px;
+}
+
+.login-form button {
+  margin: 24px 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  background-color: var(--blue);
+  color: white;
+  border: 1px solid var(--blue);
+  box-shadow: 0 1px 1px var(--inner-shadow-blue);
+  padding: 16px 30px;
+  border-radius: 32px;
+}
+
+.login-form button:hover {
+  cursor: pointer;
+  background-color: var(--hover-blue);
+  box-shadow: inset 0 -1px 0 0 var(--inner-shadow-blue);
+}
+
+.login-form button:focus-visible {
+  outline: 2px solid var(--focus-outline-blue);
+  outline-offset: 3px;
+}
+
+.create-account-p {
+  margin-top: 0;
+  align-self: center;
+  font-size: 1rem;
+}
+
+.create-account-p button {
+  outline: none;
+  border: none;
+  background-color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--blue);
+}
+
+.create-account-p button:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--darkblue);
+}
+
+.create-account-p button:focus-visible {
+  outline: 2px solid var(--focus-outline-blue);
+  outline-offset: 3px;
+}

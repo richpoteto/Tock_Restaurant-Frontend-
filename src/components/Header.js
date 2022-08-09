@@ -59,9 +59,9 @@ function HeaderUser() {
   );
 }
 
-function HeaderSimple() {
+function HeaderSimple({ greyscale }) {
   return (
-    <div className="header-simple">
+    <div className={greyscale ? "header-simple greyscale" : "header-simple"}>
       <HeaderShow />
     </div>
   );

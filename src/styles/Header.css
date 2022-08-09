@@ -157,7 +157,7 @@
   z-index: 99;
 }
 
-.header-simple .header-show h1,
-.header-simple .header-show img{
+.header-simple.greyscale .header-show h1,
+.header-simple.greyscale .header-show img{
   filter: grayscale(100%);
 }

@@ -1,6 +1,7 @@
 import BookPage from './components/BookPage';
 import { Header, HeaderSimple } from './components/Header';
 import HomePage from './components/HomePage';
+import LoginPage from './components/LoginPage';
 import RestaurantPage from './components/RestaurantPage';
 import SearchPage from './components/SearchPage';
 import './styles/App.css';
@@ -12,8 +13,10 @@ function App() {
       {/* <HomePage /> */}
       {/* <RestaurantPage /> */}
       {/* <SearchPage /> */}
-      <HeaderSimple />
-      <BookPage />
+      {/* <HeaderSimple greyscale={true}/> */}
+      {/* <BookPage /> */}
+      <HeaderSimple greyscale={false}/>
+      <LoginPage />
     </div>
   );
 }
