@@ -143,3 +143,21 @@
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
 }
+
+.header-simple {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 30px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 1px 2px var(--inner-shadow-white);
+  height: 64px;
+  z-index: 99;
+}
+
+.header-simple .header-show h1,
+.header-simple .header-show img{
+  filter: grayscale(100%);
+}

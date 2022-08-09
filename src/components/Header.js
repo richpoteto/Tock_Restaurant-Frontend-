@@ -59,4 +59,12 @@ function HeaderUser() {
   );
 }
 
-export default Header;
+function HeaderSimple() {
+  return (
+    <div className="header-simple">
+      <HeaderShow />
+    </div>
+  );
+}
+
+export { Header, HeaderSimple };
