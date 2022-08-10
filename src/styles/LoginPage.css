@@ -23,7 +23,7 @@
   width: 100%;
   font-family: inherit;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 500;
   background-color: white;
   color: black;
   border: 1px solid var(--border-white);
@@ -149,7 +149,9 @@
   font-size: 1rem;
 }
 
-.create-account-p button {
+.create-account-p a {
+  margin-left: 8px;
+  text-decoration: none;
   outline: none;
   border: none;
   background-color: white;
@@ -158,13 +160,13 @@
   color: var(--blue);
 }
 
-.create-account-p button:hover {
+.create-account-p a:hover {
   cursor: pointer;
   text-decoration: underline;
   color: var(--darkblue);
 }
 
-.create-account-p button:focus-visible {
+.create-account-p a:focus-visible {
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
 }

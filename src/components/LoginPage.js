@@ -1,12 +1,12 @@
 import '../styles/LoginPage.css';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-function LoginPage() {
-  const [signingUp, setSigningUp] = useState(false);
+function LoginPage({ signingUp }) {
+  // const [signingUp, setSigningUp] = useState(signUpPage);
 
-  function onFormChange() {
-    setSigningUp(!signingUp);
-  }
+  // function onFormChange() {
+  //   setSigningUp(!signingUp);
+  // }
 
   return (
     <div className="login-page">
@@ -14,7 +14,7 @@ function LoginPage() {
       <PartnerLoginList signingUp={signingUp} />
       <BreakLine />
       <LoginForm signingUp={signingUp} />
-      <FormChange signingUp={signingUp} onFormChange={onFormChange} />
+      <FormChange signingUp={signingUp} />
     </div>
   );
 }
@@ -71,19 +71,19 @@ function LoginForm({ signingUp }) {
           <a>Forgot password?</a>
         }
         <button type="submit">
-          Log in
+          {signingUp ? "Sign up" : "Log in"}
         </button>
       </form>
   );
 }
 
-function FormChange({ signingUp, onFormChange }) {
+function FormChange({ signingUp }) {
   return (
     <p className="create-account-p">
       {signingUp ? "Already have an account?" : "New to Toock?"}
-      <button type="button" onClick={onFormChange}>
+      <Link to={signingUp ? "/login" : "/signup"}>
         {signingUp ? "Log in" : "Create an account"}
-      </button>
+      </Link>
     </p>
   );
 }

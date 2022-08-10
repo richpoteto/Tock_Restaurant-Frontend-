@@ -1,20 +1,24 @@
 import '../styles/SearchPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
+import { useParams } from 'react-router-dom';
 
 function SearchPage() {
+  // Get restaurant name with useParams from react-router-dom.
+  let params = useParams();
+  const gotCuisine = params.cuisine;
+  const restaurantsOfCuisine = RESTAURANTS.filter((res) => res.cuisine === gotCuisine);
+
   return (
     <div className="search-page">
-      <ResultsList />
+      <ResultsList restaurantsArray={restaurantsOfCuisine} />
     </div>
   );
 }
 
-function ResultsList() {
-  const restaurants = RESTAURANTS;
-
+function ResultsList({ restaurantsArray }) {
   return (
     <div className="results-list">
-      {restaurants.map((restaurant) => {
+      {restaurantsArray.map((restaurant) => {
         return (
           <ResultCard key={restaurant.name} restaurant={restaurant} />
         );

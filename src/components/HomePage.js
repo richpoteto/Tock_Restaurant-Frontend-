@@ -1,6 +1,7 @@
 import '../styles/HomePage.css';
 import HomeBannerImage from '../resources/images/home-banner.jpg';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
   return (
@@ -112,8 +113,15 @@ function RestaurantShowGrid({ restaurants }) {
 }
 
 function RestaurantCard({ restaurant }) {
+  let navigate = useNavigate();
+
+  function onClickRestaurantCard() {
+    // console.log(restaurant.name);
+    navigate(`/restaurant/${restaurant.name}`);
+  }
+
   return (
-    <div className="home-restaurant-card">
+    <div className="home-restaurant-card" onClick={onClickRestaurantCard}>
       <img className="home-restaurant-card-img" src={restaurant.photoURL} alt={restaurant.name} />
       <h5 className="home-restaurant-card-header">{restaurant.name}</h5>
       <p className="home-restaurant-card-text">{restaurant.cuisine}</p>

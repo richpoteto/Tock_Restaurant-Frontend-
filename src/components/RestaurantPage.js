@@ -1,8 +1,14 @@
 import '../styles/RestaurantPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
+import { useParams } from 'react-router-dom';
 
 function RestaurantPage() {
-  const restaurant = RESTAURANTS[3];
+  // Get restaurant name with useParams from react-router-dom.
+  let params = useParams();
+  const gotRestaurantName = params.restaurantName;
+  const restaurant = RESTAURANTS.find((res) => {
+    return res.name === gotRestaurantName;
+  });
 
   return (
     <div className="restaurant-page">

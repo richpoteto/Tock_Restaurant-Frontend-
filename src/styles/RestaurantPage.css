@@ -19,7 +19,7 @@
 .restaurant-photo-img {
   width: 100%;
   box-shadow: 0 2px 4px var(--inner-shadow-white);
-  /* height: 500px; */
+  border-radius: 3px;
 }
 
 .booking-window {
@@ -107,7 +107,7 @@
 .restaurant-show-price-cuisine {
   margin: 16px 0 0 0;
   font-size: 1rem;
-  font-weight: normal;
+  font-weight: 500;
 }
 
 .restaurant-show-description {
