@@ -27,8 +27,27 @@ function HomeBanner() {
 function SearchBar() {
   const d = new Date();
 
+  let navigate = useNavigate();
+
+  function onSubmitSearchBar(event) {
+    event.preventDefault();
+    // console.log(event.target);
+
+    // Using URLSearchParams to navigate to /search/q.
+    const paramsObj = 
+      {
+        cuisine: 'All',
+        date: event.target.date.value,
+        hour: event.target.hour.value,
+        partySize: event.target.partySize.value
+      };
+    const searchParams = new URLSearchParams(paramsObj);
+    const searchParamsString = searchParams.toString();
+    navigate(`/search/${searchParamsString}`);
+  }
+
   return (
-    <form className="search-bar">
+    <form className="search-bar" onSubmit={onSubmitSearchBar}>
       <SearchBarDateInput d={d} />
       <SearchBarHourSelect d={d} />
       <SearchBarPartySizeSelect maxSize="10" />
@@ -52,6 +71,7 @@ function SearchBarDateInput({ d }) {
 function SearchBarHourSelect({ d }) {
   const timeStringNow = d.toLocaleTimeString('en-GB'); // 24-hour format
   const currentHourNumber = Number(timeStringNow.slice(0, 2));
+  
   // Array of hour integers from current hour to 22;
   const hourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
 

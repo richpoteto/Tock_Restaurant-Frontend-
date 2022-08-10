@@ -1,7 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import { Header, HeaderSimple } from './components/Header';
-import LoginPage from './components/LoginPage';
-import SearchPage from './components/SearchPage';
 import './styles/App.css';
 
 function App({ simpleHeader }) {

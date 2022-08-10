@@ -18,8 +18,11 @@ root.render(
           <Route path='restaurant' element={<RestaurantPage />}>
             <Route path=':restaurantName' element={<RestaurantPage />} />
           </Route>
-          <Route path='search-cuisine' element={<SearchPage />}>
-            <Route path=':cuisine' element={<SearchPage />} />
+          {/* <Route path='pick-cuisine' element={<SearchPage />}>
+            <Route path=':qCuisine/:qDate/:qHour/:qPartySize' element={<SearchPage />} />
+          </Route> */}
+          <Route path='search' element={<SearchPage />}>
+            <Route path=':q' element={<SearchPage />} />
           </Route>
         </Route>
         <Route path='/login' element={<App simpleHeader={true} />}>

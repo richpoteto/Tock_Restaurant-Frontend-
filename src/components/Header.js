@@ -7,8 +7,8 @@ import { useEffect, useRef, useState } from 'react';
 // Custom Hook for the CuisineSearchBtn and CuisineSelect alternating mechanism.
 function useOutsideClick(ref, callback) {
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (!ref.current ) {
+    function handleClickOutside() {
+      if (!ref.current) {
         console.log("clicked outside");
         callback();
       } 
@@ -25,8 +25,8 @@ function useOutsideClick(ref, callback) {
 function Header() {
   const [cuisineSelectOn, setCuisineSelectOn] = useState(false);
 
-  function onClickCuisineSearch(e) {
-    e.stopPropagation();
+  function onClickCuisineSearchBtn(event) {
+    event.stopPropagation();
     setCuisineSelectOn(true);
   }
 
@@ -46,7 +46,7 @@ function Header() {
           <CuisineSelect onClickOutside={onClickOutside} /> 
           : 
           <div ref={cuisineSearchBtnRef}>
-            <CuisineSearchBtn onClickCuisineSearch={onClickCuisineSearch} />
+            <CuisineSearchBtn onClickCuisineSearchBtn={onClickCuisineSearchBtn} />
           </div>
         }
       </div>
@@ -70,9 +70,9 @@ function HeaderShow() {
   );
 }
 
-function CuisineSearchBtn({ onClickCuisineSearch }) {
+function CuisineSearchBtn({ onClickCuisineSearchBtn }) {
   return (
-    <button className="cuisine-search-btn" onClick={onClickCuisineSearch}>
+    <button className="cuisine-search-btn" onClick={onClickCuisineSearchBtn}>
       <span className="material-symbols-outlined">search</span>
       <span className="cuisine-search-text">Pick a cuisine</span>
     </button>
@@ -94,10 +94,29 @@ function CuisineSelect(props) {
 function CuisineBtn({ cuisine, onClickOutside }) {
   let navigate = useNavigate();
 
-  function onClickCuisineBtn(event) {
-    navigate(`/search-cuisine/${cuisine}`);
+  const d = new Date();
+  const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format of String.
+  const timeStringNow = d.toLocaleTimeString('en-GB'); // 24-hour format.
+  const currentHourNumber = Number(timeStringNow.slice(0, 2)); // Current hour in 2 digits of Number.
+  const partySizeDefault = Number(2); // Default party size of 2 of Number.
+
+  function onClickCuisineBtn() {
+    // Using URLSearchParams to navigate to /search/q.
+    const paramsObj = 
+      {
+        cuisine: cuisine,
+        date: dateStringNow,
+        hour: currentHourNumber,
+        partySize: partySizeDefault
+      };
+    const searchParams = new URLSearchParams(paramsObj);
+    const searchParamsString = searchParams.toString();
+    navigate(`/search/${searchParamsString}`);
+
+    // Directly navigate to /pick-cuisine and bunch of params:
+    // navigate(`/pick-cuisine/${cuisine}/${dateStringNow}/${currentHourNumber}/${partySizeDefault}`);
     // event.stopPropagation();
-    // console.log(`/search-cuisine/${cuisine}`)
+    // console.log(`/pick-cuisine/${cuisine}`)
     onClickOutside();
   }
 

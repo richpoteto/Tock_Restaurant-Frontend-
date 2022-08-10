@@ -1,16 +1,26 @@
 import '../styles/SearchPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function SearchPage() {
-  // Get restaurant name with useParams from react-router-dom.
+  // Using useParams() and URLSearchParams to get each param including cuisine, date, hour, partySize.
   let params = useParams();
-  const gotCuisine = params.cuisine;
-  const restaurantsOfCuisine = RESTAURANTS.filter((res) => res.cuisine === gotCuisine);
+  const searchParams = new URLSearchParams(params.q);
+
+  function getRestaurantsArrayFromSearchParams(searchParams) {
+    const cuisine = searchParams.get('cuisine');
+    let restaurantsArray;
+    if (cuisine === 'All') {
+      restaurantsArray = RESTAURANTS;
+    } else {
+      restaurantsArray = RESTAURANTS.filter((res) => res.cuisine === cuisine);
+    }
+    return restaurantsArray;
+  }
 
   return (
     <div className="search-page">
-      <ResultsList restaurantsArray={restaurantsOfCuisine} />
+      <ResultsList restaurantsArray={getRestaurantsArrayFromSearchParams(searchParams)} />
     </div>
   );
 }
@@ -27,18 +37,24 @@ function ResultsList({ restaurantsArray }) {
   );
 }
 
-function ResultCard(props) {
+function ResultCard({ restaurant }) {
   return (
     <div className="result-card">
-      <ResultShow {...props} />
+      <ResultShow restaurant={restaurant} />
       <BookingCard />
     </div>
   ); 
 }
 
 function ResultShow({ restaurant }) {
+  let navigate = useNavigate();
+
+  function onClickResultShow() {
+    navigate(`/restaurant/${restaurant.name}`);
+  }
+
   return (
-    <div className="result-show">
+    <div className="result-show" onClick={onClickResultShow}>
       <ResultShowText restaurant={restaurant} />
       <img className="result-show-img" src={restaurant.photoURL} alt={restaurant.name} />
     </div>
