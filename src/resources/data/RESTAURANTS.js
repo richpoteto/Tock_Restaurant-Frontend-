@@ -106,6 +106,7 @@ const cuisinesArray = RESTAURANTS.reduce((prev, curr) =>
 );
 
 const CUISINES = Array.from(new Set(cuisinesArray)).sort();
+CUISINES.unshift("All");
 
 // console.log(CUISINES);
 

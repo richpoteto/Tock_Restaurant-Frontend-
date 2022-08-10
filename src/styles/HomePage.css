@@ -39,20 +39,10 @@
   background: linear-gradient(180deg, rgb(242 242 242) 2%, rgba(255,255,255,1) 6%);
 }
 
-.search-bar {
-  height: 80px;
-  /* width: 80%; */
-  padding: 0 16px 0 32px;
+.banner-down-container .search-bar {
   margin-top: -40px;
-  z-index: 1;
-  background-color: white;
-  border: 1px solid var(--border-white);
-  border-radius: 40px;
-  display: flex;
-  align-items: center;
-  gap: 48px;
 }
-
+/*
 .search-bar label {
   display: flex;
   flex-direction: column;
@@ -71,7 +61,6 @@
   font-weight: normal;
   cursor: pointer;
   border: none;
-  /* outline: none; */
 }
 
 .search-bar label:hover,
@@ -111,7 +100,7 @@
 .search-bar-btn:focus-visible {
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
-}
+} */
 
 .home-restaurant-show {
   max-width: 1280px;

@@ -1,6 +1,7 @@
 import '../styles/SearchPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { useNavigate, useParams } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
 function SearchPage() {
   // Using useParams() and URLSearchParams to get each param including cuisine, date, hour, partySize.
@@ -18,30 +19,62 @@ function SearchPage() {
     return restaurantsArray;
   }
 
+  function getPartySizeFromSearchParams(searchParams) {
+    return searchParams.get('partySize');
+  }
+
   return (
     <div className="search-page">
-      <ResultsList restaurantsArray={getRestaurantsArrayFromSearchParams(searchParams)} />
+      <FiltersContainer />
+      <ResultsList 
+        restaurantsArray={getRestaurantsArrayFromSearchParams(searchParams)}
+        partySize={getPartySizeFromSearchParams(searchParams)}
+      />
     </div>
   );
 }
 
-function ResultsList({ restaurantsArray }) {
+function FiltersContainer() {
+  return (
+    <div className="filters-container">
+      <SearchBar cuisineSelectOn={true} />
+    </div>
+  );
+}
+
+function FilterCuisine() {
+  return (
+    <form className="filter-cuisine">
+      <label>
+        <select>
+
+        </select>
+      </label>
+    </form>
+  );
+}
+
+function ResultsList({ restaurantsArray, partySize }) {
   return (
     <div className="results-list">
       {restaurantsArray.map((restaurant) => {
         return (
-          <ResultCard key={restaurant.name} restaurant={restaurant} />
+          <ResultCard 
+            key={restaurant.name}
+            restaurant={restaurant}
+            partySize={partySize}
+          />
         );
       })}
     </div>
   );
 }
 
-function ResultCard({ restaurant }) {
+function ResultCard({ restaurant, partySize }) {
   return (
     <div className="result-card">
       <ResultShow restaurant={restaurant} />
-      <BookingCard />
+      <BookingCard partySize={partySize} />
     </div>
   ); 
 }
@@ -70,12 +103,12 @@ function ResultShowText({ restaurant }) {
   );
 };
 
-function BookingCard() {
+function BookingCard({ partySize }) {
   return (
     <div className="booking-card">
       <p className="booking-card-header">
         <span className="material-symbols-outlined">restaurant</span>
-        Reservation for parties of 2
+        Reservation for parties of {partySize}
       </p>
       <SlotsRow />
     </div>

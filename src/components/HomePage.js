@@ -2,13 +2,14 @@ import '../styles/HomePage.css';
 import HomeBannerImage from '../resources/images/home-banner.jpg';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { useNavigate } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
 function HomePage() {
   return (
     <div className="home-page">
       <HomeBanner />
       <div className="banner-down-container">
-        <SearchBar />
+        <SearchBar cuisineSelectOn={false} />
         <RestaurantShow />
       </div>
     </div>
@@ -24,85 +25,85 @@ function HomeBanner() {
   );
 }
 
-function SearchBar() {
-  const d = new Date();
+// function SearchBar() {
+//   const d = new Date();
 
-  let navigate = useNavigate();
+//   let navigate = useNavigate();
 
-  function onSubmitSearchBar(event) {
-    event.preventDefault();
-    // console.log(event.target);
+//   function onSubmitSearchBar(event) {
+//     event.preventDefault();
+//     // console.log(event.target);
 
-    // Using URLSearchParams to navigate to /search/q.
-    const paramsObj = 
-      {
-        cuisine: 'All',
-        date: event.target.date.value,
-        hour: event.target.hour.value,
-        partySize: event.target.partySize.value
-      };
-    const searchParams = new URLSearchParams(paramsObj);
-    const searchParamsString = searchParams.toString();
-    navigate(`/search/${searchParamsString}`);
-  }
+//     // Using URLSearchParams to navigate to /search/q.
+//     const paramsObj = 
+//       {
+//         cuisine: 'All',
+//         date: event.target.date.value,
+//         hour: event.target.hour.value,
+//         partySize: event.target.partySize.value
+//       };
+//     const searchParams = new URLSearchParams(paramsObj);
+//     const searchParamsString = searchParams.toString();
+//     navigate(`/search/${searchParamsString}`);
+//   }
 
-  return (
-    <form className="search-bar" onSubmit={onSubmitSearchBar}>
-      <SearchBarDateInput d={d} />
-      <SearchBarHourSelect d={d} />
-      <SearchBarPartySizeSelect maxSize="10" />
-      <button type="submit" className="search-bar-btn">
-        <span className="material-symbols-outlined">search</span>
-      </button>
-    </form>
-  );
-}
+//   return (
+//     <form className="search-bar" onSubmit={onSubmitSearchBar}>
+//       <SearchBarDateInput d={d} />
+//       <SearchBarHourSelect d={d} />
+//       <SearchBarPartySizeSelect maxSize="10" />
+//       <button type="submit" className="search-bar-btn">
+//         <span className="material-symbols-outlined">search</span>
+//       </button>
+//     </form>
+//   );
+// }
 
-function SearchBarDateInput({ d }) {
-  const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format
+// function SearchBarDateInput({ d }) {
+//   const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format
 
-  return (
-    <label>Date
-      <input type="date" name="date" min={dateStringNow} defaultValue={dateStringNow} />
-    </label>
-  );
-}
+//   return (
+//     <label>Date
+//       <input type="date" name="date" min={dateStringNow} defaultValue={dateStringNow} />
+//     </label>
+//   );
+// }
 
-function SearchBarHourSelect({ d }) {
-  const timeStringNow = d.toLocaleTimeString('en-GB'); // 24-hour format
-  const currentHourNumber = Number(timeStringNow.slice(0, 2));
+// function SearchBarHourSelect({ d }) {
+//   const timeStringNow = d.toLocaleTimeString('en-GB'); // 24-hour format
+//   const currentHourNumber = Number(timeStringNow.slice(0, 2));
   
-  // Array of hour integers from current hour to 22;
-  const hourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
+//   // Array of hour integers from current hour to 22;
+//   const hourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
 
-  return (
-    <label>Time
-      <select name="hour" defaultValue={currentHourNumber}>
-        {hourNumbersArray.map((hour, i) => {
-          return (
-            <option key={hour} value={hour}>{i === 0 ? "Now" : `${hour}:00`}</option>
-          );
-        })}
-      </select>
-    </label>
-  );
-}
+//   return (
+//     <label>Time
+//       <select name="hour" defaultValue={currentHourNumber}>
+//         {hourNumbersArray.map((hour, i) => {
+//           return (
+//             <option key={hour} value={hour}>{i === 0 ? "Now" : `${hour}:00`}</option>
+//           );
+//         })}
+//       </select>
+//     </label>
+//   );
+// }
 
-function SearchBarPartySizeSelect({ maxSize }) {
-  const partySizeNumbersArray = Array.from(Array(Number(maxSize)), (e, i) => i + 1);
+// function SearchBarPartySizeSelect({ maxSize }) {
+//   const partySizeNumbersArray = Array.from(Array(Number(maxSize)), (e, i) => i + 1);
 
-  return (
-    <label>Party Size
-      <select defaultValue="2" name="partySize">
-        {partySizeNumbersArray.map((number) => {
-          return (
-            <option key={number} value={number}>{number} guests</option>
-          );
-        })}
-      </select>
-    </label>
-  );
-}
+//   return (
+//     <label>Party Size
+//       <select defaultValue="2" name="partySize">
+//         {partySizeNumbersArray.map((number) => {
+//           return (
+//             <option key={number} value={number}>{number} guests</option>
+//           );
+//         })}
+//       </select>
+//     </label>
+//   );
+// }
 
 function RestaurantShow() {
   // Shows only 8 restaurants, most recently added.
@@ -136,7 +137,6 @@ function RestaurantCard({ restaurant }) {
   let navigate = useNavigate();
 
   function onClickRestaurantCard() {
-    // console.log(restaurant.name);
     navigate(`/restaurant/${restaurant.name}`);
   }
 
