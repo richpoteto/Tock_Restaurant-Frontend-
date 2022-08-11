@@ -42,18 +42,6 @@ function FiltersContainer() {
   );
 }
 
-function FilterCuisine() {
-  return (
-    <form className="filter-cuisine">
-      <label>
-        <select>
-
-        </select>
-      </label>
-    </form>
-  );
-}
-
 function ResultsList({ restaurantsArray, partySize }) {
   return (
     <div className="results-list">

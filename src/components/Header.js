@@ -74,7 +74,7 @@ function CuisineSearchBtn({ onClickCuisineSearchBtn }) {
   return (
     <button className="cuisine-search-btn" onClick={onClickCuisineSearchBtn}>
       <span className="material-symbols-outlined">search</span>
-      <span className="cuisine-search-text">Pick a cuisine</span>
+      <span className="cuisine-search-text">Pick a cuisine for today</span>
     </button>
   );
 }
