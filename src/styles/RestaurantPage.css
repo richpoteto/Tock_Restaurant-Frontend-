@@ -4,11 +4,17 @@
   align-self: center;
 }
 
-.photo-booking-show-container {
+.restaurant-page-main {
   margin-top: 32px;
   width: 100%;
   display: grid;
   grid-template-columns: 7.5fr 2.5fr;
+  gap: 32px;
+}
+
+.restaurant-photo-show-container {
+  display: flex;
+  flex-direction: column;
   gap: 32px;
 }
 
@@ -23,10 +29,11 @@
 }
 
 .booking-window {
+  margin-bottom: 16px;
   border: 1px solid var(--border-white);
   border-radius: 3px;
   box-shadow: 0 1px 2px var(--inner-shadow-white);
-  padding: 16px;
+  padding: 16px 16px 0 16px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -73,6 +80,7 @@
 }
 
 .booking-window-btn {
+  height: 50px;
   width: 100%;
   font-family: inherit;
   font-size: 1rem;
@@ -81,6 +89,9 @@
   border: 1px solid var(--blue);
   padding: 12px 30px;
   border-radius: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .booking-window-btn:hover {
@@ -92,6 +103,43 @@
 .booking-window-btn:focus-visible {
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
+}
+
+.booking-window-btn.loading {
+  margin-bottom: 16px;
+  background-color: white;
+  border: none;
+  cursor: not-allowed;
+}
+
+.booking-window-btn.loading:hover {
+  box-shadow: none;
+}
+
+.booking-window-btn.searched {
+  color: black;
+  background-color: white;
+  border-color: var(--border-white);
+  margin-bottom: 16px;
+}
+
+.booking-window-btn.searched:hover {
+  background-color: var(--hover-white);
+  box-shadow: inset 0 -1px 0 0 var(--inner-shadow-white);
+}
+
+.slots-column {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slots-column .slot-btn {
+  width: 100%;
+  padding: 16px 48px;
+  border-radius: 3px;
+  margin-bottom: 16px;
 }
 
 .restaurant-show {

@@ -1,6 +1,8 @@
 import '../styles/RestaurantPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Spinner from './Spinner';
 
 function RestaurantPage() {
   // Get restaurant name with useParams from react-router-dom.
@@ -12,10 +14,12 @@ function RestaurantPage() {
 
   return (
     <div className="restaurant-page">
-      <div className="photo-booking-show-container">
-       <RestaurantPhoto restaurant={restaurant} />
-       <BookingWindow /> 
-       <RestaurantShow restaurant={restaurant} />
+      <div className="restaurant-page-main">
+        <div className="restaurant-photo-show-container">
+          <RestaurantPhoto restaurant={restaurant} />
+          <RestaurantShow restaurant={restaurant} />
+        </div>
+       <BookingWindow restaurant={restaurant} /> 
       </div>
     </div>
   );
@@ -39,17 +43,61 @@ function RestaurantShow({ restaurant }) {
   );
 }
 
-function BookingWindow() {
+function BookingWindow({ restaurant }) {
   const d = new Date();
+
+  const mockTimeSlots = [17, 19, 20, 21];
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [slotsArray, setSlotsArray] = useState([]);
+
+  function onClickSearchBtn(event) {
+    event.preventDefault();
+    setIsLoading(true);
+    setTimeout(() => {
+      console.log("slots fetched.");
+      setSlotsArray(mockTimeSlots);
+      setIsLoading(false);
+    }, 2000);
+  }
+
+  let navigate = useNavigate();
+
+  function onClickSlotBtn(event) {
+    event.preventDefault();
+
+    // Using URLSearchParams to navigate to /book/q.
+    const chosenHour = Number(event.target.innerText.slice(0, 2));
+    const paramsObj = 
+      {
+        restaurant: restaurant.name,
+        
+      }
+
+
+    console.log(chosenHour);
+    navigate(`/book/`)
+  }
 
   return (
     <form className="booking-window">
       <BookingWindowDateInput d={d} />
-      <BookingWindowHourSelect d={d} />
+      <BookingWindowHourSelect d={d} openHour={restaurant.openHour} closeHour={restaurant.closeHour} />
       <BookingWindowPartySizeSelect maxSize="10" />
-      <button type="submit" className="booking-window-btn">
-        Book Now
+      <button 
+        type="submit" 
+        className=
+          {isLoading 
+          ? 
+          "booking-window-btn loading" 
+          : 
+          `${slotsArray.length ? "booking-window-btn searched" : "booking-window-btn"}`
+          }
+        onClick={onClickSearchBtn}
+      >
+        {isLoading ? <Spinner /> : `${slotsArray.length ? "Search again" : "Search"}`}
       </button>
+      <SlotsColumn slotsArray={slotsArray} onClickSlotBtn={onClickSlotBtn} />
     </form>
   );
 }
@@ -64,18 +112,24 @@ function BookingWindowDateInput({ d }) {
   );
 }
 
-function BookingWindowHourSelect({ d }) {
+function BookingWindowHourSelect({ d, openHour, closeHour }) {
   const timeStringNow = d.toLocaleTimeString('en-GB'); // 24-hour format
   const currentHourNumber = Number(timeStringNow.slice(0, 2));
   // Array of hour integers from current hour to 22;
-  const hourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
+  // const hourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
+
+  // Array of hour integers for this restaurant's open to close hours.
+  const hourNumbersArray = Array.from(Array(closeHour - openHour), (e, i) => i + openHour);
 
   return (
     <label>Time
       <select name="hour" defaultValue={currentHourNumber}>
         {hourNumbersArray.map((hour, i) => {
           return (
-            <option key={hour} value={hour}>{i === 0 ? "Now" : `${hour}:00`}</option>
+            <option key={hour} value={hour}>
+              {/* {i === 0 ? "Now" : `${hour}:00`} */}
+              {hour + ":00"}
+            </option>
           );
         })}
       </select>
@@ -96,6 +150,29 @@ function BookingWindowPartySizeSelect({ maxSize }) {
         })}
       </select>
     </label>
+  );
+}
+
+function SlotsColumn({ slotsArray, onClickSlotBtn }) {
+  // const mockSlotsArray = [16, 17, 18, 19, 20, 21, 22];
+  const showingSlotsArray = slotsArray.slice(0, 4);
+
+  return (
+    <div className="slots-column">
+      {showingSlotsArray.map((slot) => {
+        return (
+          <SlotBtn key={slot} time={slot} onClickSlotBtn={onClickSlotBtn} />
+        );
+      })}
+    </div>
+  );
+}
+
+function SlotBtn({ time, onClickSlotBtn }) {
+  return (
+    <button className="slot-btn" onClick={onClickSlotBtn}>
+      {`${time}:00`}
+    </button>
   );
 }
 

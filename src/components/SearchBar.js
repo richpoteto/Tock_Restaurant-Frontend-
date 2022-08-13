@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import '../styles/SearchBar.css';
-import { useNavigate, useParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { CUISINES } from '../resources/data/RESTAURANTS';
 
@@ -20,14 +20,12 @@ function SearchBar({ cuisineSelectOn }) {
         hour: event.target.hour.value,
         partySize: event.target.partySize.value
       };
-    const searchParams = new URLSearchParams(paramsObj);
-    const searchParamsString = searchParams.toString();
-    navigate(`/search/${searchParamsString}`);
+    const searchParams = createSearchParams(paramsObj);
+    navigate(`/search?${searchParams}`);
   }
 
   // Using useParams() and URLSearchParams to get each param including cuisine, date, hour, partySize.
-  let params = useParams();
-  const searchParams = new URLSearchParams(params.q);
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchParamsObj = 
     {
       cuisine: searchParams.get('cuisine'),
@@ -44,10 +42,16 @@ function SearchBar({ cuisineSelectOn }) {
   //   cuisinesArray = CUISINES.filter((cuisine) => cuisine === searchParamsObj.cuisine);
   // }
 
+  const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format
+  const [chosenDate, setChosenDate] = useState(dateStringNow);
+  function onChooseDate(value) {
+    setChosenDate(value);
+  }
+
   return (
     <form className="search-bar" onSubmit={onSubmitSearchBar}>
-      <SearchBarDateInput d={d} qDate={searchParamsObj.date} />
-      <SearchBarHourSelect d={d} qHour={searchParamsObj.hour} />
+      <SearchBarDateInput d={d} qDate={searchParamsObj.date} onChooseDate={onChooseDate} />
+      <SearchBarHourSelect d={d} qHour={searchParamsObj.hour} chosenDate={chosenDate} />
       <SearchBarPartySizeSelect maxSize="10" qPartySize={searchParamsObj.partySize} />
       {cuisineSelectOn ? 
         <SearchBarCuisineSelect cuisinesArray={cuisinesArray} qCuisine={searchParamsObj.cuisine} />
@@ -61,7 +65,7 @@ function SearchBar({ cuisineSelectOn }) {
   );
 }
 
-function SearchBarDateInput({ d, qDate }) {
+function SearchBarDateInput({ d, qDate, onChooseDate }) {
   const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format
 
   // Updateing showDate state whenever receiving a new and different qDate from params. 
@@ -75,6 +79,7 @@ function SearchBarDateInput({ d, qDate }) {
 
   function onInputDate(event) {
     setShowDate(event.target.value);
+    onChooseDate(event.target.value);
   }
 
   return (
@@ -90,12 +95,21 @@ function SearchBarDateInput({ d, qDate }) {
   );
 }
 
-function SearchBarHourSelect({ d, qHour }) {
+function SearchBarHourSelect({ d, qHour, chosenDate }) {
+  const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format
   const timeStringNow = d.toLocaleTimeString('en-GB'); // 24-hour format
   const currentHourNumber = Number(timeStringNow.slice(0, 2));
   
-  // Array of hour integers from current hour to 22;
-  const hourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
+  // Array of hour integers from current hour to 22 for today if it's later than 10,
+  // otherwise it's just the current hour.
+  let todayHourNumbersArray;
+  if (23 - currentHourNumber <= 0) {
+    todayHourNumbersArray = [currentHourNumber];
+  } else {
+    todayHourNumbersArray = Array.from(Array(23 - currentHourNumber), (e, i) => i + currentHourNumber);
+  }
+  // Array of hour integers from 10 to 23 for other regular days.
+  const regularHourNumbersArray = Array.from(Array(23 - 10), (e, i) => i + 10);
 
   // Updateing showHour state whenever receiving a new and different qHour from params. 
   const [showHour, setShowHour] = useState(qHour);
@@ -113,11 +127,17 @@ function SearchBarHourSelect({ d, qHour }) {
   return (
     <label>Time
       <select name="hour" value={showHour || currentHourNumber} onChange={onSelectHour}>
-        {hourNumbersArray.map((hour, i) => {
-          return (
-            <option key={hour} value={hour}>{i === 0 ? "Now" : `${hour}:00`}</option>
-          );
-        })}
+        {
+          chosenDate === dateStringNow 
+          ? 
+          todayHourNumbersArray.map((hour, i) => {
+            return <option key={hour} value={hour}>{i === 0 ? "Now" : `${hour}:00`}</option>;
+          })
+          :
+          regularHourNumbersArray.map((hour, i) => {
+            return <option key={hour} value={hour}>{`${hour}:00`}</option>;
+          })
+        }
       </select>
     </label>
   );

@@ -48,6 +48,10 @@
   font-size: 1.4rem;
 }
 
+.search-page .search-bar .search-bar-btn span:hover {
+  color: var(--blue);
+}
+
 .results-list {
   max-width: 700px;
   margin: 24px 0;
