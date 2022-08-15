@@ -1,6 +1,6 @@
 import '../styles/RestaurantPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import Spinner from './Spinner';
 
@@ -46,41 +46,47 @@ function RestaurantShow({ restaurant }) {
 function BookingWindow({ restaurant }) {
   const d = new Date();
 
-  const mockTimeSlots = [17, 19, 20, 21];
-
   const [isLoading, setIsLoading] = useState(false);
   const [slotsArray, setSlotsArray] = useState([]);
+  const [qInfo, setQInfo] = useState();
 
-  function onClickSearchBtn(event) {
+  function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
     setTimeout(() => {
+      setQInfo({
+        date: event.target.date.value,
+        hour: Number(event.target.hour.value),
+        partySize: Number(event.target.partySize.value)
+      });
       console.log("slots fetched.");
+      const mockTimeSlots = Array.from(Array(4), (e, i) => i + Number(event.target.hour.value));
       setSlotsArray(mockTimeSlots);
       setIsLoading(false);
     }, 2000);
   }
 
+  // Using createSearchParams() to navigate to /book?...
   let navigate = useNavigate();
 
   function onClickSlotBtn(event) {
     event.preventDefault();
 
-    // Using URLSearchParams to navigate to /book/q.
     const chosenHour = Number(event.target.innerText.slice(0, 2));
     const paramsObj = 
       {
         restaurant: restaurant.name,
-        
-      }
-
-
-    console.log(chosenHour);
-    navigate(`/book/`)
+        date: qInfo.date,
+        hour: chosenHour,
+        partySize: qInfo.partySize
+      };
+    const searchParams = createSearchParams(paramsObj);
+    // console.log(paramsObj);
+    navigate(`/book?${searchParams}`);
   }
 
   return (
-    <form className="booking-window">
+    <form className="booking-window" onSubmit={onSubmit}>
       <BookingWindowDateInput d={d} />
       <BookingWindowHourSelect d={d} openHour={restaurant.openHour} closeHour={restaurant.closeHour} />
       <BookingWindowPartySizeSelect maxSize="10" />
@@ -93,7 +99,6 @@ function BookingWindow({ restaurant }) {
           : 
           `${slotsArray.length ? "booking-window-btn searched" : "booking-window-btn"}`
           }
-        onClick={onClickSearchBtn}
       >
         {isLoading ? <Spinner /> : `${slotsArray.length ? "Search again" : "Search"}`}
       </button>

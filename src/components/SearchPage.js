@@ -1,12 +1,11 @@
 import '../styles/SearchPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SearchBar from './SearchBar';
 
 function SearchPage() {
-  // Using useParams() and URLSearchParams to get each param including cuisine, date, hour, partySize.
-  let params = useParams();
-  const searchParams = new URLSearchParams(params.q);
+  // Using useSearchParams() to get each param including cuisine, date, hour, partySize.
+  const [searchParams] = useSearchParams();
 
   function getRestaurantsArrayFromSearchParams(searchParams) {
     const cuisine = searchParams.get('cuisine');

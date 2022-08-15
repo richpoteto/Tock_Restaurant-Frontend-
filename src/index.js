@@ -19,7 +19,7 @@ root.render(
             <Route path=':restaurantName' element={<RestaurantPage />} />
           </Route>
           <Route path='search' element={<SearchPage />}>
-            <Route path=':q' element={<SearchPage />} />
+            {/* <Route path=':q' element={<SearchPage />} /> */}
           </Route>
         </Route>
         <Route path='/login' element={<App simpleHeader={true} />}>

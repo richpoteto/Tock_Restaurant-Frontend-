@@ -7,12 +7,12 @@ import { CUISINES } from '../resources/data/RESTAURANTS';
 function SearchBar({ cuisineSelectOn }) {
   const d = new Date();
 
+  // Using createSearchParams() to navigate to /search?...
   let navigate = useNavigate();
 
   function onSubmitSearchBar(event) {
     event.preventDefault();
 
-    // Using URLSearchParams to navigate to /search/q.
     const paramsObj = 
       {
         cuisine: `${event.target.cuisine ? event.target.cuisine.value : "All"}`,
@@ -25,7 +25,7 @@ function SearchBar({ cuisineSelectOn }) {
   }
 
   // Using useParams() and URLSearchParams to get each param including cuisine, date, hour, partySize.
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const searchParamsObj = 
     {
       cuisine: searchParams.get('cuisine'),
