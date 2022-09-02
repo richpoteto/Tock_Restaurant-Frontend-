@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
+import BookPage from './components/BookPage';
 import HomePage from './components/HomePage';
 import LoginPage from './components/LoginPage';
 import RestaurantPage from './components/RestaurantPage';
@@ -18,9 +19,8 @@ root.render(
           <Route path='restaurant' element={<RestaurantPage />}>
             <Route path=':restaurantName' element={<RestaurantPage />} />
           </Route>
-          <Route path='search' element={<SearchPage />}>
-            {/* <Route path=':q' element={<SearchPage />} /> */}
-          </Route>
+          <Route path='search' element={<SearchPage />} />
+          <Route path='book' element={<BookPage />} />
         </Route>
         <Route path='/login' element={<App simpleHeader={true} />}>
           <Route index element={<LoginPage signingUp={false} />} />

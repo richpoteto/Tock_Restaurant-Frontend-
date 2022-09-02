@@ -80,6 +80,7 @@
 
 .login-line a {
   color: var(--blue);
+  text-decoration: none;
 }
 
 .login-line a:hover {

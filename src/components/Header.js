@@ -111,7 +111,7 @@ function CuisineBtn({ cuisine, onClickOutside }) {
       };
     const searchParams = new URLSearchParams(paramsObj);
     const searchParamsString = searchParams.toString();
-    navigate(`/search/${searchParamsString}`);
+    navigate(`/search?${searchParamsString}`);
 
     // Directly navigate to /pick-cuisine and bunch of params:
     // navigate(`/pick-cuisine/${cuisine}/${dateStringNow}/${currentHourNumber}/${partySizeDefault}`);

@@ -18,6 +18,10 @@ function SearchPage() {
     return restaurantsArray;
   }
 
+  // function getDateFromSearchParams(searchParams) {
+  //   return searchParams.get('date');
+  // }
+
   function getPartySizeFromSearchParams(searchParams) {
     return searchParams.get('partySize');
   }
