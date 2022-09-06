@@ -6,7 +6,7 @@ import Spinner from './Spinner';
 import { getTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
 
 function RestaurantPage() {
-  // Get restaurant name with useParams from react-router-dom.
+  // Retrieve the restaurant object with useParams from react-router-dom from restaurantName.
   let params = useParams();
   const gotRestaurantName = params.restaurantName;
   const restaurant = RESTAURANTS.find((res) => {
@@ -51,34 +51,55 @@ function BookingWindow({ restaurant }) {
   const [slotsArray, setSlotsArray] = useState([]);
   const [qInfo, setQInfo] = useState();
 
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
-    setTimeout(async () => {
-      setQInfo({
-        date: event.target.date.value,
-        hour: Number(event.target.hour.value),
-        partySize: Number(event.target.partySize.value)
-      });
+    setQInfo({
+      date: event.target.date.value,
+      hour: Number(event.target.hour.value),
+      partySize: Number(event.target.partySize.value)
+    });
 
-      // console.log("slots fetched.");
-      // const mockTimeSlots = Array.from(Array(4), (e, i) => i + qTime);
-      // setSlotsArray(mockTimeSlots);
+    // Give available time slots for restaurant at the query date from Firestore.
+    const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, event.target.date.value);
+    // Calculate an array of all time slots for the restaurant.
+    const qTime = Number(event.target.hour.value);
+    const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
+    console.log("allTimeShots: ", allTimeSlots);
+    // Make array of available time slots from allTimeSlots and bookedSlots.
+    const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
+    console.log("availableTimeSlots: ", availableTimeSlots);
+    setSlotsArray(availableTimeSlots);
 
-      // Give available time slots for restaurant at the query date from Firestore.
-      const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, event.target.date.value);
-      // Calculate an array of all time slots for the restaurant.
-      const qTime = Number(event.target.hour.value);
-      const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
-      console.log("allTimeShots: ", allTimeSlots);
-      // Make array of available time slots from allTimeSlots and bookedSlots.
-      const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
-      console.log("availableTimeSlots: ", availableTimeSlots);
-      setSlotsArray(availableTimeSlots);
-
-      setIsLoading(false);
-    }, 1000);
+    setIsLoading(false);
   }
+  // function onSubmit(event) {
+  //   event.preventDefault();
+  //   setIsLoading(true);
+  // setTimeout(async () => {
+  //   setQInfo({
+  //     date: event.target.date.value,
+  //     hour: Number(event.target.hour.value),
+  //     partySize: Number(event.target.partySize.value)
+  //   });
+
+  //   // console.log("slots fetched.");
+  //   // const mockTimeSlots = Array.from(Array(4), (e, i) => i + qTime);
+  //   // setSlotsArray(mockTimeSlots);
+
+  //   // Give available time slots for restaurant at the query date from Firestore.
+  //   const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, event.target.date.value);
+  //   // Calculate an array of all time slots for the restaurant.
+  //   const qTime = Number(event.target.hour.value);
+  //   const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
+  //   console.log("allTimeShots: ", allTimeSlots);
+  //   // Make array of available time slots from allTimeSlots and bookedSlots.
+  //   const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
+  //   console.log("availableTimeSlots: ", availableTimeSlots);
+  //   setSlotsArray(availableTimeSlots);
+
+  //   setIsLoading(false);
+  // }, 1000);
 
   // Using createSearchParams() to navigate to /book?...
   let navigate = useNavigate();
@@ -95,7 +116,6 @@ function BookingWindow({ restaurant }) {
         partySize: qInfo.partySize
       };
     const searchParams = createSearchParams(paramsObj);
-    // console.log(paramsObj);
     navigate(`/book?${searchParams}`);
   }
 

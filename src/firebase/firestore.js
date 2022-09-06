@@ -28,10 +28,27 @@ async function getTimeSlotsOnDateForRestaurantFromFirestore(qRestaurantName, qDa
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     console.log(doc.id, " => ", doc.data());
-    bookedSlots.push(doc.data().time);
+    bookedSlots.push(doc.data().hour);
   });
   console.log("slots fetched: " + bookedSlots);
   return bookedSlots;
 }
 
-export { addRESTAURANTSToFirestore, getTimeSlotsOnDateForRestaurantFromFirestore };
+// Post request of booking the slot with data: restaurant, date, time, partySize, username and email.
+async function addReservationToFirestore(reservationInfos) {
+  const reservationsRef = collection(db, "restaurants", reservationInfos.restaurant, "reservations");
+  await setDoc(doc(reservationsRef), {
+    date: reservationInfos.date,
+    hour: Number(reservationInfos.hour),
+    partySize: Number(reservationInfos.partySize),
+    username: reservationInfos.username,
+    email: reservationInfos.email,
+  });
+  console.log("Document written into collection: ", reservationsRef.id);
+}
+
+export { 
+  addRESTAURANTSToFirestore, 
+  getTimeSlotsOnDateForRestaurantFromFirestore, 
+  addReservationToFirestore 
+};

@@ -1,6 +1,7 @@
 import '../styles/BookPage.css';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
+import { addReservationToFirestore } from '../firebase/firestore';
 
 function BookPage() {
   // Using useParams() and URLSearchParams to get each param including restaurant, date, hour, partySize.
@@ -12,31 +13,56 @@ function BookPage() {
       hour: searchParams.get('hour'),
       partySize: searchParams.get('partySize')
     };
+
   // const mockRestaurant = RESTAURANTS[1];
   // const mockSlot = {date: "2022-08-08", time: 17, partySize: 2};
+
+  // Retrieve the restaurant object with useParams from react-router-dom from restaurant.
   const restaurant = RESTAURANTS.find((res) => {
     return res.name === searchParamsObj.restaurant;
   });
+
   const slot = {
     date: searchParamsObj.date,
     hour: searchParamsObj.hour,
     partySize: searchParamsObj.partySize
   };
 
+  // Booking the reservation with Firestore function addReservationToFirestore().
+  function onSubmit(event) {
+    event.preventDefault();
+    const reservationInfos = 
+      {
+        username: event.target.username.value,
+        email: event.target.email.value,
+        ...searchParamsObj
+      };
+    console.log(reservationInfos);
+    addReservationToFirestore(reservationInfos);
+
+    // TODO! add spinning wheel
+  }
+
   return (
     <div className="book-page">
       <h3 className="book-page-title">Complete your reservation</h3>
       <BookShow restaurant={restaurant} slot={slot} />
-      <AddDetailForm />
+      <AddDetailForm onSubmit={onSubmit} />
     </div>
   );
 }
 
 function BookShow({ restaurant, slot }) {
+  let navigate = useNavigate();
+
+  function onClickRestaurantName() {
+    navigate(`/restaurant/${restaurant.name}`);
+  }
+
   return (
     <div className="book-show">
       <div className="book-show-main">
-        <h4 className="book-show-restaurant-name">{restaurant.name}</h4>
+        <h4 className="book-show-restaurant-name" onClick={onClickRestaurantName}>{restaurant.name}</h4>
         <BookShowSlot slot={slot} />
       </div>
       <img src={restaurant.photoURL} alt={restaurant.name} />
@@ -63,16 +89,16 @@ function BookShowSlot({ slot }) {
   );
 }
 
-function AddDetailForm() {
+function AddDetailForm({ onSubmit }) {
   return (
-    <form className="add-detail-form">
+    <form className="add-detail-form" onSubmit={onSubmit}>
       <p className="add-detail-form-title">Add your reservation details</p>
       <LoginLine />
       <label>Username
-        <input type="text" placeholder="Username" required />
+        <input type="text" placeholder="Username" name="username" required />
       </label>
       <label>Email address
-        <input type="email" placeholder="Email address" required />
+        <input type="email" placeholder="Email address" name="email" required />
       </label>
       <button type="submit">
         Complete reservation
