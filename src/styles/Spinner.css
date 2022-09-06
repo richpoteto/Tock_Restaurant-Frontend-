@@ -7,6 +7,12 @@
   }
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .loading-spinner {
   width: 15px;
   height: 15px;

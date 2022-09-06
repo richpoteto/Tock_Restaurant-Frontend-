@@ -116,7 +116,8 @@
   outline: none;
 }
 
-.add-detail-form button {
+.add-detail-btn {
+  height: 50px;
   margin: 16px 0;
   width: 100%;
   font-family: inherit;
@@ -128,13 +129,32 @@
   border-radius: 32px;
 }
 
-.add-detail-form button:hover {
+.add-detail-btn:hover {
   cursor: pointer;
   background-color: var(--hover-blue);
   box-shadow: inset 0 -1px 0 0 var(--inner-shadow-blue);
 }
 
-.add-detail-form button:focus-visible {
+.add-detail-btn:focus-visible {
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
+}
+
+.add-detail-btn.loading {
+  padding: 0;
+  background-color: var(--hover-blue);
+  cursor: not-allowed;
+}
+
+.add-detail-btn.loading:hover {
+  box-shadow: none;
+}
+
+.reservation-completed-show {
+  width: 100%;
+  padding-top: 64px;
+  display: flex;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 500;
 }

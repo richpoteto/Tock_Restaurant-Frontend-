@@ -2,6 +2,8 @@ import '../styles/BookPage.css';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { addReservationToFirestore } from '../firebase/firestore';
+import { useState } from 'react';
+import Spinner from './Spinner';
 
 function BookPage() {
   // Using useParams() and URLSearchParams to get each param including restaurant, date, hour, partySize.
@@ -13,24 +15,23 @@ function BookPage() {
       hour: searchParams.get('hour'),
       partySize: searchParams.get('partySize')
     };
-
-  // const mockRestaurant = RESTAURANTS[1];
-  // const mockSlot = {date: "2022-08-08", time: 17, partySize: 2};
-
-  // Retrieve the restaurant object with useParams from react-router-dom from restaurant.
-  const restaurant = RESTAURANTS.find((res) => {
-    return res.name === searchParamsObj.restaurant;
-  });
-
   const slot = {
     date: searchParamsObj.date,
     hour: searchParamsObj.hour,
     partySize: searchParamsObj.partySize
   };
+  // Retrieve the restaurant object with useParams from react-router-dom from restaurant.
+  const restaurant = RESTAURANTS.find((res) => {
+    return res.name === searchParamsObj.restaurant;
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isReserved, setIsReserved] = useState(false);
 
   // Booking the reservation with Firestore function addReservationToFirestore().
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
+    setIsLoading(true);
     const reservationInfos = 
       {
         username: event.target.username.value,
@@ -38,16 +39,21 @@ function BookPage() {
         ...searchParamsObj
       };
     console.log(reservationInfos);
-    addReservationToFirestore(reservationInfos);
-
-    // TODO! add spinning wheel
+    await addReservationToFirestore(reservationInfos);
+    setIsReserved(true);
+    setIsLoading(false);
   }
 
   return (
     <div className="book-page">
       <h3 className="book-page-title">Complete your reservation</h3>
       <BookShow restaurant={restaurant} slot={slot} />
-      <AddDetailForm onSubmit={onSubmit} />
+      {isReserved 
+      ? 
+      <ReservationCompletedShow />
+      :
+      <AddDetailForm onSubmit={onSubmit} isLoading={isLoading} />
+      }
     </div>
   );
 }
@@ -89,7 +95,7 @@ function BookShowSlot({ slot }) {
   );
 }
 
-function AddDetailForm({ onSubmit }) {
+function AddDetailForm({ onSubmit, isLoading }) {
   return (
     <form className="add-detail-form" onSubmit={onSubmit}>
       <p className="add-detail-form-title">Add your reservation details</p>
@@ -100,11 +106,22 @@ function AddDetailForm({ onSubmit }) {
       <label>Email address
         <input type="email" placeholder="Email address" name="email" required />
       </label>
-      <button type="submit">
-        Complete reservation
+      <button 
+        type="submit"
+        className={isLoading ? "add-detail-btn loading" : "add-detail-btn"}
+      >
+        {isLoading ? <Spinner /> : "Complete reservation"}
       </button>
     </form>
   );
+}
+
+function ReservationCompletedShow() {
+  return (
+    <div className="reservation-completed-show">
+      Your reservation is completed. Enjoy!
+    </div>
+  )
 }
 
 function LoginLine() {
