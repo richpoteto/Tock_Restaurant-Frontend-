@@ -7,11 +7,6 @@ function App({ simpleHeader }) {
     <div className="App">
       {simpleHeader ? <HeaderSimple /> : <Header />}
       <Outlet />
-      {/* <SearchPage /> */}
-      {/* <HeaderSimple greyscale={true}/> */}
-      {/* <BookPage /> */}
-      {/* <HeaderSimple greyscale={false}/>
-      <LoginPage /> */}
     </div>
   );
 }

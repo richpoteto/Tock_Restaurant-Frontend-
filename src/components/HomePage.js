@@ -3,6 +3,7 @@ import HomeBannerImage from '../resources/images/home-banner.jpg';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import { addRESTAURANTSToFirestore } from '../firebase/firestore';
 
 function HomePage() {
   return (
@@ -12,6 +13,7 @@ function HomePage() {
         <SearchBar cuisineSelectOn={false} />
         <RestaurantShow />
       </div>
+      <AddRESTAURANTS />
     </div>
   );
 }
@@ -146,6 +148,16 @@ function RestaurantCard({ restaurant }) {
       <h5 className="home-restaurant-card-header">{restaurant.name}</h5>
       <p className="home-restaurant-card-text">{restaurant.cuisine}</p>
     </div>
+  );
+}
+
+function AddRESTAURANTS() {
+  function onClick() {
+    addRESTAURANTSToFirestore();
+  }
+
+  return (
+    <button onClick={onClick}>Add RESTAURANTS</button>
   );
 }
 

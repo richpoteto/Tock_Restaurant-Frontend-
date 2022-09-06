@@ -3,6 +3,7 @@ import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import Spinner from './Spinner';
+import { getTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
 
 function RestaurantPage() {
   // Get restaurant name with useParams from react-router-dom.
@@ -53,17 +54,30 @@ function BookingWindow({ restaurant }) {
   function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       setQInfo({
         date: event.target.date.value,
         hour: Number(event.target.hour.value),
         partySize: Number(event.target.partySize.value)
       });
-      console.log("slots fetched.");
-      const mockTimeSlots = Array.from(Array(4), (e, i) => i + Number(event.target.hour.value));
-      setSlotsArray(mockTimeSlots);
+
+      // console.log("slots fetched.");
+      // const mockTimeSlots = Array.from(Array(4), (e, i) => i + qTime);
+      // setSlotsArray(mockTimeSlots);
+
+      // Give available time slots for restaurant at the query date from Firestore.
+      const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, event.target.date.value);
+      // Calculate an array of all time slots for the restaurant.
+      const qTime = Number(event.target.hour.value);
+      const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
+      console.log("allTimeShots: ", allTimeSlots);
+      // Make array of available time slots from allTimeSlots and bookedSlots.
+      const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
+      console.log("availableTimeSlots: ", availableTimeSlots);
+      setSlotsArray(availableTimeSlots);
+
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
   }
 
   // Using createSearchParams() to navigate to /book?...
@@ -112,7 +126,12 @@ function BookingWindowDateInput({ d }) {
 
   return (
     <label>Date
-      <input type="date" name="date" min={dateStringNow} defaultValue={dateStringNow} />
+      <input 
+        type="date" 
+        name="date" 
+        min={dateStringNow} 
+        defaultValue={dateStringNow}
+      />
     </label>
   );
 }
