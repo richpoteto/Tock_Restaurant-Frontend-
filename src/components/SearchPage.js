@@ -1,6 +1,6 @@
 import '../styles/SearchPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import { getTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
 import { useEffect, useState } from 'react';
@@ -145,7 +145,15 @@ function SlotsRow({ restaurant, partySize, date, hour }) {
     return (
       <div className="slots-row">
         {showingSlotsArray.map((slot) => {
-          return <SlotBtn key={slot} time={slot} />
+          return (
+            <SlotBtn 
+              key={slot}
+              hour={slot}
+              restaurant={restaurant}
+              date={date}
+              partySize={partySize}
+            />
+          );
         })}
       </div>
     )
@@ -158,10 +166,26 @@ function SlotsRow({ restaurant, partySize, date, hour }) {
   }
 }
 
-function SlotBtn({ time }) {
+function SlotBtn({ hour, restaurant, date, partySize }) {
+  // Using createSearchParams() to navigate to /book?...
+  let navigate = useNavigate();
+
+  function onClickSlotBtn(event) {
+    event.preventDefault();
+    const paramsObj = 
+      {
+        restaurant: restaurant.name,
+        date: date,
+        hour: hour,
+        partySize: partySize
+      };
+    const searchParams = createSearchParams(paramsObj);
+    navigate(`/book?${searchParams}`);
+  }
+
   return (
-    <button className="slot-btn">
-      {`${time}:00`}
+    <button className="slot-btn" onClick={onClickSlotBtn}>
+      {`${hour}:00`}
     </button>
   );
 }
