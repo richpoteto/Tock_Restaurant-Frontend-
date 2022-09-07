@@ -134,7 +134,8 @@
 }
 
 .slots-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
@@ -158,4 +159,9 @@
 .slot-btn:focus-visible {
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
+}
+
+.slots-row-none {
+  font-size: 1rem;
+  padding: 8px 0;
 }

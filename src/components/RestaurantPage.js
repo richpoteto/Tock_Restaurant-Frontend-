@@ -49,57 +49,42 @@ function BookingWindow({ restaurant }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [slotsArray, setSlotsArray] = useState([]);
+  const [initialSearched, setInitialSearched] = useState(false);
   const [qInfo, setQInfo] = useState();
 
-  async function onSubmit(event) {
-    event.preventDefault();
-    setIsLoading(true);
-    setQInfo({
-      date: event.target.date.value,
-      hour: Number(event.target.hour.value),
-      partySize: Number(event.target.partySize.value)
-    });
-
+  // Give available time slots for restaurant at the query date from Firestore.
+  async function getAvailableSlotsFromFirestore(restaurant, date, hour) {
     // Give available time slots for restaurant at the query date from Firestore.
-    const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, event.target.date.value);
+    const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, date);
     // Calculate an array of all time slots for the restaurant.
-    const qTime = Number(event.target.hour.value);
-    const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
+    const qHour = Number(hour);
+    const allTimeSlots = Array.from(Array(restaurant.closeHour  - qHour), (e, i) => i + qHour);
     console.log("allTimeShots: ", allTimeSlots);
     // Make array of available time slots from allTimeSlots and bookedSlots.
     const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
     console.log("availableTimeSlots: ", availableTimeSlots);
+    // setSlotsArray(availableTimeSlots);
+    return availableTimeSlots;
+  }
+
+  async function onSubmit(event) {
+    event.preventDefault();
+    const qDate = event.target.date.value;
+    const qHour = Number(event.target.hour.value);
+    const qPartySize = Number(event.target.partySize.value);
+    setIsLoading(true);
+    setQInfo({
+      date: qDate,
+      hour: qHour,
+      partySize: qPartySize,
+    });
+    const availableTimeSlots = await getAvailableSlotsFromFirestore(restaurant, qDate, qHour);
+
     setSlotsArray(availableTimeSlots);
 
     setIsLoading(false);
+    setInitialSearched(true);
   }
-  // function onSubmit(event) {
-  //   event.preventDefault();
-  //   setIsLoading(true);
-  // setTimeout(async () => {
-  //   setQInfo({
-  //     date: event.target.date.value,
-  //     hour: Number(event.target.hour.value),
-  //     partySize: Number(event.target.partySize.value)
-  //   });
-
-  //   // console.log("slots fetched.");
-  //   // const mockTimeSlots = Array.from(Array(4), (e, i) => i + qTime);
-  //   // setSlotsArray(mockTimeSlots);
-
-  //   // Give available time slots for restaurant at the query date from Firestore.
-  //   const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, event.target.date.value);
-  //   // Calculate an array of all time slots for the restaurant.
-  //   const qTime = Number(event.target.hour.value);
-  //   const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
-  //   console.log("allTimeShots: ", allTimeSlots);
-  //   // Make array of available time slots from allTimeSlots and bookedSlots.
-  //   const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
-  //   console.log("availableTimeSlots: ", availableTimeSlots);
-  //   setSlotsArray(availableTimeSlots);
-
-  //   setIsLoading(false);
-  // }, 1000);
 
   // Using createSearchParams() to navigate to /book?...
   let navigate = useNavigate();
@@ -131,12 +116,16 @@ function BookingWindow({ restaurant }) {
           ? 
           "booking-window-btn loading" 
           : 
-          `${slotsArray.length ? "booking-window-btn searched" : "booking-window-btn"}`
+          `${initialSearched ? "booking-window-btn searched" : "booking-window-btn"}`
           }
       >
-        {isLoading ? <Spinner /> : `${slotsArray.length ? "Search again" : "Search"}`}
+        {isLoading ? <Spinner /> : `${initialSearched ? "Search again" : "Search"}`}
       </button>
-      <SlotsColumn slotsArray={slotsArray} onClickSlotBtn={onClickSlotBtn} />
+      <SlotsColumn 
+        slotsArray={slotsArray}
+        initialSearched={initialSearched}
+        onClickSlotBtn={onClickSlotBtn}
+      />
     </form>
   );
 }
@@ -197,19 +186,29 @@ function BookingWindowPartySizeSelect({ maxSize }) {
   );
 }
 
-function SlotsColumn({ slotsArray, onClickSlotBtn }) {
+function SlotsColumn({ slotsArray, initialSearched, onClickSlotBtn }) {
   // const mockSlotsArray = [16, 17, 18, 19, 20, 21, 22];
+
+  // Showing only first 4 time slots from the slotsArray.
   const showingSlotsArray = slotsArray.slice(0, 4);
 
-  return (
-    <div className="slots-column">
-      {showingSlotsArray.map((slot) => {
-        return (
-          <SlotBtn key={slot} time={slot} onClickSlotBtn={onClickSlotBtn} />
-        );
-      })}
-    </div>
-  );
+  if (initialSearched && !slotsArray.length) {
+    return (
+      <div className="slot-column-none">
+        No slots found.
+      </div>
+    );
+  } else {
+    return (
+      <div className="slots-column">
+        {showingSlotsArray.map((slot) => {
+          return (
+            <SlotBtn key={slot} time={slot} onClickSlotBtn={onClickSlotBtn} />
+          );
+        })}
+      </div>
+    );
+  }
 }
 
 function SlotBtn({ time, onClickSlotBtn }) {

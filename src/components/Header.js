@@ -9,7 +9,7 @@ function useOutsideClick(ref, callback) {
   useEffect(() => {
     function handleClickOutside() {
       if (!ref.current) {
-        console.log("clicked outside");
+        // console.log("clicked outside");
         callback();
       } 
     }

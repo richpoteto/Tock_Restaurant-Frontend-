@@ -2,10 +2,19 @@ import '../styles/SearchPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import { getTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
+import { useEffect, useState } from 'react';
 
 function SearchPage() {
   // Using useSearchParams() to get each param including cuisine, date, hour, partySize.
   const [searchParams] = useSearchParams();
+  const searchParamsObj = 
+  {
+    cuisine: searchParams.get('cuisine'),
+    date: searchParams.get('date'),
+    hour: searchParams.get('hour'),
+    partySize: searchParams.get('partySize')
+  };
 
   function getRestaurantsArrayFromSearchParams(searchParams) {
     const cuisine = searchParams.get('cuisine');
@@ -18,20 +27,14 @@ function SearchPage() {
     return restaurantsArray;
   }
 
-  // function getDateFromSearchParams(searchParams) {
-  //   return searchParams.get('date');
-  // }
-
-  function getPartySizeFromSearchParams(searchParams) {
-    return searchParams.get('partySize');
-  }
-
   return (
     <div className="search-page">
       <FiltersContainer />
       <ResultsList 
         restaurantsArray={getRestaurantsArrayFromSearchParams(searchParams)}
-        partySize={getPartySizeFromSearchParams(searchParams)}
+        partySize={searchParamsObj.partySize}
+        date={searchParamsObj.date}
+        hour={searchParamsObj.hour}
       />
     </div>
   );
@@ -45,7 +48,7 @@ function FiltersContainer() {
   );
 }
 
-function ResultsList({ restaurantsArray, partySize }) {
+function ResultsList({ restaurantsArray, partySize, date, hour }) {
   return (
     <div className="results-list">
       {restaurantsArray.map((restaurant) => {
@@ -54,6 +57,8 @@ function ResultsList({ restaurantsArray, partySize }) {
             key={restaurant.name}
             restaurant={restaurant}
             partySize={partySize}
+            date={date}
+            hour={hour}
           />
         );
       })}
@@ -61,11 +66,13 @@ function ResultsList({ restaurantsArray, partySize }) {
   );
 }
 
-function ResultCard({ restaurant, partySize }) {
+function ResultCard(props) {
   return (
     <div className="result-card">
-      <ResultShow restaurant={restaurant} />
-      <BookingCard partySize={partySize} />
+      <ResultShow restaurant={props.restaurant} />
+      <BookingCard 
+        {...props}
+      />
     </div>
   ); 
 }
@@ -89,34 +96,66 @@ function ResultShowText({ restaurant }) {
   return (
     <div className="result-show-text">
       <h3 className="result-show-name">{restaurant.name}</h3>
-      <p className="result-show-price-cuisine">{"$".repeat(Number(restaurant.price))} | {restaurant.cuisine}</p>
+      <p className="result-show-price-cuisine">
+        {"$".repeat(Number(restaurant.price))} | {restaurant.cuisine}
+      </p>
     </div>
   );
 };
 
-function BookingCard({ partySize }) {
+function BookingCard(props) {
   return (
     <div className="booking-card">
       <p className="booking-card-header">
         <span className="material-symbols-outlined">restaurant</span>
-        Reservation for parties of {partySize}
+        Reservation for parties of {props.partySize}
       </p>
-      <SlotsRow />
+      <SlotsRow {...props} />
     </div>
   );
 }
 
-function SlotsRow() {
-  const mockSlotsArray = [16, 17, 18, 19, 20, 21, 22];
-  const showingSlotsArray = mockSlotsArray.slice(0, 4);
+function SlotsRow({ restaurant, partySize, date, hour }) {
+  // const mockSlotsArray = [16, 17, 18, 19, 20, 21, 22];
+  // const showingSlotsArray = mockSlotsArray.slice(0, 4);
+  const [showingSlotsArray, setShowingSlotsArray] = useState([]);
 
-  return (
-    <div className="slots-row">
-      {showingSlotsArray.map((slot) => {
-        return <SlotBtn key={slot} time={slot} />
-      })}
-    </div>
-  );
+  // Update showingSlotsArray everytime the page gets new form inputs, e.g. date, cuisine, hour, partySize.
+  useEffect(() => {
+    getAvailableSlotsFromFirestore(restaurant, date, hour);
+  }, [restaurant, partySize, date, hour]);
+
+  // Give available time slots for restaurant at the query date from Firestore.
+  async function getAvailableSlotsFromFirestore(restaurant, date, hour) {
+    const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, date);
+    // Calculate an array of all time slots for the restaurant.
+    const qTime = Number(hour);
+    const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
+    // console.log("allTimeShots: ", allTimeSlots);
+    // Make array of available time slots from allTimeSlots and bookedSlots.
+    const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
+    // console.log("availableTimeSlots: ", availableTimeSlots);
+    // return availableTimeSlots;
+    const showingSlotsArray = availableTimeSlots.slice(0, 4);
+    console.log("showingSlotsArray: " ,showingSlotsArray);
+    setShowingSlotsArray(showingSlotsArray);
+  }
+
+  if (showingSlotsArray.length !== 0) {
+    return (
+      <div className="slots-row">
+        {showingSlotsArray.map((slot) => {
+          return <SlotBtn key={slot} time={slot} />
+        })}
+      </div>
+    )
+  } else {
+    return (
+      <div className="slots-row-none">
+        No time slots found. Please try another date.
+      </div>
+    )
+  }
 }
 
 function SlotBtn({ time }) {

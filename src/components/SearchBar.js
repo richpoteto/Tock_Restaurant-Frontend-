@@ -5,14 +5,11 @@ import { useEffect, useState } from 'react';
 import { CUISINES } from '../resources/data/RESTAURANTS';
 
 function SearchBar({ cuisineSelectOn }) {
-  const d = new Date();
-
   // Using createSearchParams() to navigate to /search?...
   let navigate = useNavigate();
-
+  
   function onSubmitSearchBar(event) {
     event.preventDefault();
-
     const paramsObj = 
       {
         cuisine: `${event.target.cuisine ? event.target.cuisine.value : "All"}`,
@@ -34,14 +31,8 @@ function SearchBar({ cuisineSelectOn }) {
       partySize: searchParams.get('partySize')
     };
 
-  // Get cuisinesArray for SearchBarCuisineSelect to use for options.
-  const cuisinesArray = CUISINES;
-  // if (searchParamsObj.cuisine === "All") {
-  //   cuisinesArray = CUISINES;
-  // } else {
-  //   cuisinesArray = CUISINES.filter((cuisine) => cuisine === searchParamsObj.cuisine);
-  // }
-
+  // Get localeDateString in Canada.
+  const d = new Date();
   const dateStringNow = d.toLocaleDateString('en-ca'); // yyyy-mm-dd format
   const [chosenDate, setChosenDate] = useState(dateStringNow);
   function onChooseDate(value) {
@@ -54,7 +45,7 @@ function SearchBar({ cuisineSelectOn }) {
       <SearchBarHourSelect d={d} qHour={searchParamsObj.hour} chosenDate={chosenDate} />
       <SearchBarPartySizeSelect maxSize="10" qPartySize={searchParamsObj.partySize} />
       {cuisineSelectOn ? 
-        <SearchBarCuisineSelect cuisinesArray={cuisinesArray} qCuisine={searchParamsObj.cuisine} />
+        <SearchBarCuisineSelect qCuisine={searchParamsObj.cuisine} />
         :
         null
       }
@@ -172,7 +163,9 @@ function SearchBarPartySizeSelect({ maxSize, qPartySize }) {
   );
 }
 
-function SearchBarCuisineSelect({ cuisinesArray, qCuisine }) {
+function SearchBarCuisineSelect({ qCuisine }) {
+  // Get cuisinesArray for SearchBarCuisineSelect to use for options.
+  const cuisinesArray = CUISINES;
 
   // Updateing showCuisine state whenever receiving a new and different qCuisine from params. 
   const [showCuisine, setShowCuisine] = useState(qCuisine);
