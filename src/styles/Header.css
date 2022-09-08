@@ -144,6 +144,30 @@
   outline-offset: 3px;
 }
 
+.header-user.logged-in {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.header-user.logged-in:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+
+.header-user.logged-in:focus-visible {
+  outline: 2px solid var(--focus-outline-blue);
+  outline-offset: 3px;
+}
+
+.header-user.logged-in .material-symbols-outlined {
+  font-size: 44px;
+  color: black;
+}
+
 .header-simple {
   display: flex;
   align-items: center;

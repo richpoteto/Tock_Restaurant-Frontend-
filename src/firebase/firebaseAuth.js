@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
 // Initialize Firebase Authentication and get a reference to the service.
 const auth = getAuth(app);
