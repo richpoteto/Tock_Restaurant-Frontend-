@@ -143,6 +143,12 @@
   outline-offset: 3px;
 }
 
+.wrong-p {
+  margin-bottom: 0;
+  font-size: 1rem;
+  color: var(--red);
+}
+
 .create-account-p {
   margin-top: 0;
   align-self: center;
@@ -169,4 +175,35 @@
 .create-account-p a:focus-visible {
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
+}
+
+.redirect-to-home {
+  width: 80%;
+  max-width: 400px;
+  margin-top: 64px;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.redirect-to-home p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.redirect-to-home a {
+  text-decoration: none;
+  outline: none;
+  border: none;
+  background-color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--blue);
+}
+
+.redirect-to-home a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--darkblue);
 }
