@@ -1,16 +1,11 @@
 import '../styles/LoginPage.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { getCurrentUserFromAuth, auth, registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto } from '../firebase/firebaseAuth';
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import { getCurrentUserFromAuth, registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto } from '../firebase/firebaseAuth';
+import { useState } from 'react';
 
 function LoginPage({ signingUp }) {
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    })
-  }, []);
+  // eslint-disable-next-line no-unused-vars
+  const [user, setUser] = useOutletContext();
 
   if (!user) {
     return (

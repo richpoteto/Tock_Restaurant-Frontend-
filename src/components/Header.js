@@ -3,8 +3,6 @@ import '../styles/Header.css';
 import { CUISINES } from '../resources/data/RESTAURANTS';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/firebaseAuth';
 
 // Custom Hook for the CuisineSearchBtn and CuisineSelect alternating mechanism.
 function useOutsideClick(ref, callback) {
@@ -24,7 +22,7 @@ function useOutsideClick(ref, callback) {
   }, [ref, callback]);
 }
 
-function Header() {
+function Header({ user }) {
   const [cuisineSelectOn, setCuisineSelectOn] = useState(false);
 
   function onClickCuisineSearchBtn(event) {
@@ -52,7 +50,7 @@ function Header() {
           </div>
         }
       </div>
-      <HeaderUser />
+      <HeaderUser user={user} />
     </div>
   );
 }
@@ -125,14 +123,7 @@ function CuisineBtn({ cuisine, onClickOutside }) {
   );
 }
 
-function HeaderUser() {
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    })
-  }, []);
-
+function HeaderUser({ user }) {
   if (!user) {
     return (
       <div className="header-user">
