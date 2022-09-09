@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, OAuthProvider } from "firebase/auth";
 
 // Initialize Firebase Authentication and get a reference to the service.
 const auth = getAuth(app);
@@ -58,6 +58,39 @@ async function sendPasswordRecoveryEmail(email) {
     return error.code;
   }
 }
+
+// Prompt user sign up with partners like Google, Facebook and Apple with a pop up window.
+async function registerWithPartnersPopup(partner) {
+  // let provider;
+  // if (partner === "Google") {
+  //   provider = new GoogleAuthProvider();
+  // }
+  let provider;
+  switch(partner) {
+    case "Google":
+      provider = new GoogleAuthProvider();
+      break;
+    case "Facebook":
+      provider = new FacebookAuthProvider();
+      break;
+    case "Apple":
+      provider = new OAuthProvider('apple.com');
+      break;
+    default:
+      console.log("No provider provided.")
+  }
+  try {
+    await signInWithPopup(auth, provider);
+    // const result = await signInWithPopup(auth, provider);
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    // const credential = GoogleAuthProvider.credentialFromResult(result);
+    // const token = credential.accessToken;
+    // // The signed-in user info.
+    // const user = result.user;
+  } catch(error) {
+    console.error(error);
+  }
+}
  
 export { 
   registerWithEmailPassword, 
@@ -65,5 +98,6 @@ export {
   auth,
   signOutUser,
   updateUserNameAndPhoto,
-  sendPasswordRecoveryEmail
+  sendPasswordRecoveryEmail,
+  registerWithPartnersPopup
 };

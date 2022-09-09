@@ -168,6 +168,12 @@
   color: black;
 }
 
+.header-user.logged-in img {
+  height: 44px;
+  width: 44px;
+  border-radius: 22px;
+}
+
 .header-simple {
   display: flex;
   align-items: center;

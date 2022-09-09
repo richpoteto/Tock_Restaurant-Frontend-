@@ -1,6 +1,6 @@
 import '../styles/LoginPage.css';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
-import { registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto, sendPasswordRecoveryEmail } from '../firebase/firebaseAuth';
+import { registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto, sendPasswordRecoveryEmail, registerWithPartnersPopup } from '../firebase/firebaseAuth';
 import { useState } from 'react';
 
 function LoginPage() {
@@ -111,15 +111,15 @@ function PartnerLoginList(props) {
   return (
     <div className="partner-login-list">
       <PartnerLoginBtn partner="Google" {...props} />
-      <PartnerLoginBtn partner="Apple" {...props} />
-      <PartnerLoginBtn partner="Facebook" {...props} />
+      {/* <PartnerLoginBtn partner="Apple" {...props} />
+      <PartnerLoginBtn partner="Facebook" {...props} /> */}
     </div>
   );
 }
 
 function PartnerLoginBtn({ partner, signingUp }) {
   return (
-    <button className="parter-login-btn">
+    <button className="parter-login-btn" onClick={() => registerWithPartnersPopup(partner)}>
       {signingUp ? `Use my ${partner} account` : `Log in with ${partner}`}
     </button>
   );
