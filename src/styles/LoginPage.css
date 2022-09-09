@@ -104,9 +104,11 @@
 }
 
 .login-form a {
+  width: fit-content;
   color: var(--blue);
   font-weight: lighter;
   font-size: .9rem;
+  text-decoration: none;
 }
 
 .login-form a:hover {

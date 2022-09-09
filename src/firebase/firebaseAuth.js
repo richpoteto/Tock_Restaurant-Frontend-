@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail } from "firebase/auth";
 
 // Initialize Firebase Authentication and get a reference to the service.
 const auth = getAuth(app);
@@ -30,24 +30,6 @@ async function userSigninWithEmailPassword(email, password) {
   }
 }
 
-// Listen to auth state changes.
-// function monitorAuthState() {
-//   onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       // User is signed in.
-//       console.log("monitorAuth" + user.uid);
-//       return user;
-//     } else {
-//       // User is not signed in or signed out.
-//     }
-//   });
-// }
-
-// Returns current user, or null if not signed in.
-function getCurrentUserFromAuth() {
-  return auth.currentUser;
-}
-
 // Signs out the current user.
 function signOutUser() {
   signOut(auth);
@@ -60,7 +42,19 @@ async function updateUserNameAndPhoto(userName, photoUrl = null) {
       displayName: userName, photoURL: photoUrl
     });
   } catch(error) {
-    console.log(error);
+    console.error(error);
+    return error.code;
+  }
+}
+
+// Send user the password recovery email with email provided.
+async function sendPasswordRecoveryEmail(email) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return true;
+  } catch(error) {
+    // Error codes: "auth/invalid-email".
+    console.error(error);
     return error.code;
   }
 }
@@ -69,7 +63,7 @@ export {
   registerWithEmailPassword, 
   userSigninWithEmailPassword, 
   auth,
-  getCurrentUserFromAuth,
   signOutUser,
-  updateUserNameAndPhoto
+  updateUserNameAndPhoto,
+  sendPasswordRecoveryEmail
 };

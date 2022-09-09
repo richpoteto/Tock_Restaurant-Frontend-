@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import BookPage from './components/BookPage';
 import HomePage from './components/HomePage';
-import { LoginPage, SignupPage } from './components/LoginPage';
+import { ForgotpasswordPage, LoginPage, SignupPage } from './components/LoginPage';
 import RestaurantPage from './components/RestaurantPage';
 import SearchPage from './components/SearchPage';
 
@@ -27,6 +27,9 @@ root.render(
         </Route>
         <Route path='/signup' element={<App simpleHeader={true} />}>
           <Route index element={<SignupPage />} />
+        </Route>
+        <Route path='/forgotpassword' element={<App simpleHeader={true} />}>
+          <Route index element={<ForgotpasswordPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

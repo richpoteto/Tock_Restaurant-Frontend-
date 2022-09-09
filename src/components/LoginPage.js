@@ -1,6 +1,6 @@
 import '../styles/LoginPage.css';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
-import { getCurrentUserFromAuth, registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto } from '../firebase/firebaseAuth';
+import { registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto, sendPasswordRecoveryEmail } from '../firebase/firebaseAuth';
 import { useState } from 'react';
 
 function LoginPage() {
@@ -15,9 +15,7 @@ function LoginPage() {
         <BreakLine />
         <LoginForm />
         <FormChange signingUp={false} />
-        <button onClick={() => console.log(getCurrentUserFromAuth())}>Check user is signed in?</button>
         <button onClick={signOutUser}>log out</button>
-        <p>{user ? `user.email${user.email}` : "no user"}</p>
       </div>
     );
   } else {
@@ -37,14 +35,54 @@ function SignupPage() {
         <BreakLine />
         <SignupForm />
         <FormChange signingUp={true} />
-        <button onClick={() => console.log(getCurrentUserFromAuth())}>Check user is signed in?</button>
         <button onClick={signOutUser}>log out</button>
-        <p>{user ? `user.email${user.email}` : "no user"}</p>
       </div>
     );
   } else {
     return <RedirectToHome />
   }
+}
+
+function ForgotpasswordPage() {
+  const [invalidEmail, setInvalidEmail] = useState(false);
+
+  async function onSubmit(event) {
+    event.preventDefault();
+    const email = event.target.email.value;
+    // console.log(email);
+    const errorCode = await sendPasswordRecoveryEmail(email);
+    // console.log(result);
+    if (errorCode === "auth/invalid-email") {
+      setInvalidEmail(true);
+    } else {
+      setInvalidEmail(false);
+    }
+  }
+
+  return (
+    <div className="login-page">
+      <h3 className="login-page-header">Forgot your password?</h3>
+      <form className="login-form" onSubmit={onSubmit}>
+        <p>Enter the email you signed up with and you'll receive instructions on how to reset your password.</p>
+        <label>Email address
+          <input type="email" name="email" required />
+        </label>
+        {
+          invalidEmail 
+          ?
+          <div>
+            <p className="wrong-p">Email is not registered yet. Create an account now.</p> 
+            <p><Link to="/signup">Sign up</Link></p>
+          </div>
+          : 
+          null
+        }
+        <button type="submit">
+          Send instructions
+        </button>
+      </form>
+    </div>
+  )
 }
 
 function LoginPageHeader({ signingUp }) {
@@ -112,9 +150,9 @@ function LoginForm() {
       <label>Password
         <input type="password" name="password" required />
       </label>
-      <a>Forgot password?</a>
+      <Link to="/forgotpassword">Forgot password?</Link>
       {userNotFound ? <p className="wrong-p">Email is not registered yet. Create an account now.</p> : null}
-      {wrongPassword ? <p className="wrong-p">Wrong email or password. Please try again.</p> : null}
+      {wrongPassword ? <p className="wrong-p">Wrong password. Please try again.</p> : null}
       <button type="submit">
         Log in
       </button>
@@ -195,10 +233,9 @@ function RedirectToHome() {
       <p>You are signed in.</p>
       <p>Redirecting to previous page ...</p>
       <button onClick={onClickPreviousPage}>Click here if not redirected</button>
-      {/* <Link to="/">home</Link> */}
       <button onClick={signOutUser}>log out</button>
     </div>
   )
 }
 
-export { LoginPage, SignupPage };
+export { LoginPage, SignupPage, ForgotpasswordPage };
