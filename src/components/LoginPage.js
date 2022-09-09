@@ -45,42 +45,56 @@ function SignupPage() {
 
 function ForgotpasswordPage() {
   const [invalidEmail, setInvalidEmail] = useState(false);
+  const [userNotFound, setUserNorFound] = useState(false);
+  const [recoveryEmailSent, setRecoveryEmailSent] = useState(false);
 
   async function onSubmit(event) {
     event.preventDefault();
     const email = event.target.email.value;
-    // console.log(email);
     const errorCode = await sendPasswordRecoveryEmail(email);
-    // console.log(result);
-    if (errorCode === "auth/invalid-email") {
+    if (errorCode === true) {
+      setRecoveryEmailSent(true);
+    } else if (errorCode === "auth/invalid-email") {
       setInvalidEmail(true);
+      setUserNorFound(false);
+    } else if (errorCode === "auth/user-not-found") {
+      setInvalidEmail(false);
+      setUserNorFound(true);
     } else {
       setInvalidEmail(false);
+      setUserNorFound(false);
     }
   }
 
   return (
     <div className="login-page">
       <h3 className="login-page-header">Forgot your password?</h3>
-      <form className="login-form" onSubmit={onSubmit}>
-        <p>Enter the email you signed up with and you'll receive instructions on how to reset your password.</p>
-        <label>Email address
-          <input type="email" name="email" required />
-        </label>
-        {
-          invalidEmail 
-          ?
-          <div>
-            <p className="wrong-p">Email is not registered yet. Create an account now.</p> 
-            <p><Link to="/signup">Sign up</Link></p>
-          </div>
-          : 
-          null
-        }
-        <button type="submit">
-          Send instructions
-        </button>
-      </form>
+      {
+        recoveryEmailSent
+        ?
+        <p>Recovery email sent! Please check your email and follow its instructions.</p>
+        :
+        <form className="login-form" onSubmit={onSubmit}>
+          <p>Enter the email you signed up with and you'll receive instructions on how to reset your password.</p>
+          <label>Email address
+            <input type="email" name="email" required />
+          </label>
+          {
+            userNotFound 
+            ?
+            <div>
+              <p className="wrong-p">Email is not registered yet. Create an account now.</p> 
+              <p><Link to="/signup">Sign up</Link></p>
+            </div>
+            : 
+            null
+          }
+          {invalidEmail ? <p className="wrong-p">Invalid Email address. Try again.</p> : null}
+          <button type="submit">
+            Send instructions
+          </button>
+        </form>
+      }
     </div>
   )
 }
@@ -123,22 +137,29 @@ function BreakLine() {
 function LoginForm() {
   const [userNotFound, setUserNotFound] = useState(false);
   const [wrongPassword, setWrongPassword] = useState(false);
+  const [invalidEmail, setInvalidEmail] = useState(false);
 
   async function onSubmitLogin(event) {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
     const errorCode = await userSigninWithEmailPassword(email, password);
-    // console.log(errorCode === "auth/wrong-password");
     if (errorCode === "auth/wrong-password") {
       setUserNotFound(false);
       setWrongPassword(true);
+      setInvalidEmail(false);
     } else if (errorCode === "auth/user-not-found") {
       setUserNotFound(true);
       setWrongPassword(false);
+      setInvalidEmail(false);
+    } else if (errorCode === "auth/invalid-email") {
+      setUserNotFound(false);
+      setWrongPassword(false);
+      setInvalidEmail(true);
     } else {
       setUserNotFound(false);
       setWrongPassword(false);
+      setInvalidEmail(false);
     }
   }
 
@@ -153,6 +174,7 @@ function LoginForm() {
       <Link to="/forgotpassword">Forgot password?</Link>
       {userNotFound ? <p className="wrong-p">Email is not registered yet. Create an account now.</p> : null}
       {wrongPassword ? <p className="wrong-p">Wrong password. Please try again.</p> : null}
+      {invalidEmail ? <p className="wrong-p">Invalid Email address. Try again.</p> : null}
       <button type="submit">
         Log in
       </button>
@@ -168,11 +190,11 @@ function SignupForm() {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
-    const registerErrorCode = await registerWithEmailPassword(email, password);
-    if (registerErrorCode === "auth/email-already-in-use") {
+    const errorCode = await registerWithEmailPassword(email, password);
+    if (errorCode === "auth/email-already-in-use") {
       setEmailUsed(true);
       setInvalidEmail(false);
-    } else if (registerErrorCode === "auth/invalid-email") {
+    } else if (errorCode === "auth/invalid-email") {
       setEmailUsed(false);
       setInvalidEmail(true);
     } else {

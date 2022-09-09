@@ -25,7 +25,7 @@ async function userSigninWithEmailPassword(email, password) {
     console.log(user);
   } catch(error) {
     console.error(error);
-    // Error codes: "auth/wrong-password", "auth/user-not-found".
+    // Error codes: "auth/wrong-password", "auth/user-not-found", "auth/invalid-email".
     return error.code;
   }
 }
@@ -53,7 +53,7 @@ async function sendPasswordRecoveryEmail(email) {
     await sendPasswordResetEmail(auth, email);
     return true;
   } catch(error) {
-    // Error codes: "auth/invalid-email".
+    // Error codes: "auth/invalid-email", "auth/user-not-found";
     console.error(error);
     return error.code;
   }
