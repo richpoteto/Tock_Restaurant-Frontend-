@@ -61,10 +61,6 @@ async function sendPasswordRecoveryEmail(email) {
 
 // Prompt user sign up with partners like Google, Facebook and Apple with a pop up window.
 async function registerWithPartnersPopup(partner) {
-  // let provider;
-  // if (partner === "Google") {
-  //   provider = new GoogleAuthProvider();
-  // }
   let provider;
   switch(partner) {
     case "Google":

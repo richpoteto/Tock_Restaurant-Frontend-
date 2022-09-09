@@ -17,7 +17,7 @@ function App({ simpleHeader }) {
       // setUser(currentUser);
       // console.log("setUser ran once");
     })
-  }, []);
+  }, [user]);
 
 
   return (
