@@ -3,6 +3,7 @@ import '../styles/Header.css';
 import { CUISINES } from '../resources/data/RESTAURANTS';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import { signOutUser } from '../firebase/firebaseAuth';
 
 // Custom Hook for the CuisineSearchBtn and CuisineSelect alternating mechanism.
 function useOutsideClick(ref, callback) {
@@ -133,15 +134,19 @@ function HeaderUser({ user }) {
     );
   } else {
     return (
-      <button className="header-user logged-in">
-        { 
-          user.photoURL 
-          ? 
-          <img src={user.photoURL} alt="User Profile Avatar" />
-          : 
-          <span className="material-symbols-outlined">account_circle</span>
-        }
-      </button>
+      <div>
+        <button className="header-user logged-in">
+          { 
+            user.photoURL 
+            ? 
+            <img src={user.photoURL} alt="User Profile Avatar" />
+            : 
+            <span className="material-symbols-outlined">account_circle</span>
+          }
+        </button>
+        <button onClick={signOutUser}>signout</button>
+      </div>
+
     )
   }
 }

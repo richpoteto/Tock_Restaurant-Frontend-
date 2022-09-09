@@ -3,18 +3,40 @@ import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { getCurrentUserFromAuth, registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto } from '../firebase/firebaseAuth';
 import { useState } from 'react';
 
-function LoginPage({ signingUp }) {
-  // eslint-disable-next-line no-unused-vars
-  const [user, setUser] = useOutletContext();
+function LoginPage() {
+  // Retrieving user object from OutletContext.
+  const user = useOutletContext();
 
   if (!user) {
     return (
       <div className="login-page">
-        <LoginPageHeader signingUp={signingUp} />
-        <PartnerLoginList signingUp={signingUp} />
+        <LoginPageHeader signingUp={false} />
+        <PartnerLoginList signingUp={false} />
         <BreakLine />
-        {signingUp ? <SignupForm /> : <LoginForm />}
-        <FormChange signingUp={signingUp} />
+        <LoginForm />
+        <FormChange signingUp={false} />
+        <button onClick={() => console.log(getCurrentUserFromAuth())}>Check user is signed in?</button>
+        <button onClick={signOutUser}>log out</button>
+        <p>{user ? `user.email${user.email}` : "no user"}</p>
+      </div>
+    );
+  } else {
+    return <RedirectToHome />
+  }
+}
+
+function SignupPage() {
+    // Retrieving user object from OutletContext.
+  const user = useOutletContext();
+
+  if (!user) {
+    return (
+      <div className="login-page">
+        <LoginPageHeader signingUp={true} />
+        <PartnerLoginList signingUp={true} />
+        <BreakLine />
+        <SignupForm />
+        <FormChange signingUp={true} />
         <button onClick={() => console.log(getCurrentUserFromAuth())}>Check user is signed in?</button>
         <button onClick={signOutUser}>log out</button>
         <p>{user ? `user.email${user.email}` : "no user"}</p>
@@ -160,18 +182,23 @@ function RedirectToHome() {
 
   // useEffect(() => {
   //   setTimeout(() => {
-  //     navigate("/");
+  //     navigate(-1);
   //   }, 2000);
   // }, []);
+
+  function onClickPreviousPage() {
+    navigate(-1);
+  }
 
   return (
     <div className="redirect-to-home">
       <p>You are signed in.</p>
-      <p>Redirecting to home page now...</p>
-      <Link to="/">Click here if not redirected</Link>
+      <p>Redirecting to previous page ...</p>
+      <button onClick={onClickPreviousPage}>Click here if not redirected</button>
+      {/* <Link to="/">home</Link> */}
       <button onClick={signOutUser}>log out</button>
     </div>
   )
 }
 
-export default LoginPage;
+export { LoginPage, SignupPage };

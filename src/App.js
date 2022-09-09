@@ -23,7 +23,7 @@ function App({ simpleHeader }) {
   return (
     <div className="App">
       {simpleHeader ? <HeaderSimple /> : <Header user={user} />}
-      <Outlet context={[user, setUser]} />
+      <Outlet context={user} />
     </div>
   );
 }

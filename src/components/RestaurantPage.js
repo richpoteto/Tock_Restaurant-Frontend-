@@ -3,7 +3,7 @@ import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import Spinner from './Spinner';
-import { getTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
+import { getBookedTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
 
 function RestaurantPage() {
   // Retrieve the restaurant object with useParams from react-router-dom from restaurantName.
@@ -55,7 +55,7 @@ function BookingWindow({ restaurant }) {
   // Give available time slots for restaurant at the query date from Firestore.
   async function getAvailableSlotsFromFirestore(restaurant, date, hour) {
     // Give available time slots for restaurant at the query date from Firestore.
-    const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, date);
+    const bookedSlots = await getBookedTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, date);
     // Calculate an array of all time slots for the restaurant.
     const qHour = Number(hour);
     const allTimeSlots = Array.from(Array(restaurant.closeHour  - qHour), (e, i) => i + qHour);

@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import BookPage from './components/BookPage';
 import HomePage from './components/HomePage';
-import LoginPage from './components/LoginPage';
+import { LoginPage, SignupPage } from './components/LoginPage';
 import RestaurantPage from './components/RestaurantPage';
 import SearchPage from './components/SearchPage';
 
@@ -23,10 +23,10 @@ root.render(
           <Route path='book' element={<BookPage />} />
         </Route>
         <Route path='/login' element={<App simpleHeader={true} />}>
-          <Route index element={<LoginPage signingUp={false} />} />
+          <Route index element={<LoginPage />} />
         </Route>
         <Route path='/signup' element={<App simpleHeader={true} />}>
-          <Route index element={<LoginPage signingUp={true} />} />
+          <Route index element={<SignupPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

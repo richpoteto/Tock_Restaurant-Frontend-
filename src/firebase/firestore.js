@@ -21,7 +21,7 @@ async function addRestaurantDataToFirestore(restaurantData) {
 }
 
 // Get reserved time slots for a specific restaurant for a specific date.
-async function getTimeSlotsOnDateForRestaurantFromFirestore(qRestaurantName, qDate) {
+async function getBookedTimeSlotsOnDateForRestaurantFromFirestore(qRestaurantName, qDate) {
   const bookedSlots = [];
   const reservationsRef = collection(db, "restaurants", qRestaurantName, "reservations");
   const q = query(reservationsRef, where("date", "==", qDate));
@@ -43,12 +43,13 @@ async function addReservationToFirestore(reservationInfos) {
     partySize: Number(reservationInfos.partySize),
     username: reservationInfos.username,
     email: reservationInfos.email,
+    uid: reservationInfos.uid,
   });
   // console.log("Document written into collection: ", reservationsRef.id);
 }
 
 export { 
   addRESTAURANTSToFirestore, 
-  getTimeSlotsOnDateForRestaurantFromFirestore, 
+  getBookedTimeSlotsOnDateForRestaurantFromFirestore, 
   addReservationToFirestore 
 };

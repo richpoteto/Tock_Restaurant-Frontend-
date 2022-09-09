@@ -2,7 +2,7 @@ import '../styles/SearchPage.css';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import SearchBar from './SearchBar';
-import { getTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
+import { getBookedTimeSlotsOnDateForRestaurantFromFirestore } from '../firebase/firestore';
 import { useEffect, useState } from 'react';
 
 function SearchPage() {
@@ -122,23 +122,43 @@ function SlotsRow({ restaurant, partySize, date, hour }) {
 
   // Update showingSlotsArray everytime the page gets new form inputs, e.g. date, cuisine, hour, partySize.
   useEffect(() => {
-    getAvailableSlotsFromFirestore(restaurant, date, hour);
+    async function updateShowingSlots() {
+      const availableTimeSlots = await getAvailableSlotsFromFirestore(restaurant, date, hour);
+      const showingSlotsArray = makeShowingSlotsArray(availableTimeSlots, hour);
+      setShowingSlotsArray(showingSlotsArray);
+    }
+    updateShowingSlots();
   }, [restaurant, partySize, date, hour]);
 
   // Give available time slots for restaurant at the query date from Firestore.
   async function getAvailableSlotsFromFirestore(restaurant, date, hour) {
-    const bookedSlots = await getTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, date);
+    const bookedSlots = await getBookedTimeSlotsOnDateForRestaurantFromFirestore(restaurant.name, date);
     // Calculate an array of all time slots for the restaurant.
-    const qTime = Number(hour);
-    const allTimeSlots = Array.from(Array(restaurant.closeHour  - qTime), (e, i) => i + qTime);
+    // const qHour = Number(hour);
+    const openHour = restaurant.openHour;
+    const closeHour = restaurant.closeHour;
+    // Make array of all time slots from restaurant's openHour to closeHour.
+    const allTimeSlots = Array.from(Array(closeHour - openHour), (e, i) => i  + openHour);
     // console.log("allTimeShots: ", allTimeSlots);
     // Make array of available time slots from allTimeSlots and bookedSlots.
     const availableTimeSlots = allTimeSlots.filter((e) => !bookedSlots.includes(e));
     // console.log("availableTimeSlots: ", availableTimeSlots);
-    // return availableTimeSlots;
-    const showingSlotsArray = availableTimeSlots.slice(0, 4);
-    console.log("showingSlotsArray: " ,showingSlotsArray);
-    setShowingSlotsArray(showingSlotsArray);
+    return availableTimeSlots;
+  }
+
+  // Make showingSlotsArray from availableTimeSlots according to qHour.
+  function makeShowingSlotsArray(availableTimeSlots, qHour) {
+    let showingSlotsArray;
+    // If qHour is earlier than restaurant's openHour:
+    if (qHour <= availableTimeSlots[0]) {
+      showingSlotsArray = availableTimeSlots.slice(0, 4);
+    } else {
+      // Otherwise, make showingSlotsArray where it starts with the next avaiable slot later than qHour:
+      const qHourIndex = availableTimeSlots.findIndex((e) => e >= qHour);
+      showingSlotsArray = availableTimeSlots.slice(qHourIndex, qHourIndex + 4);
+    }
+    // console.log("showingSlotsArray: " ,showingSlotsArray);
+    return showingSlotsArray;
   }
 
   if (showingSlotsArray.length !== 0) {

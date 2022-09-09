@@ -1,5 +1,5 @@
 import '../styles/BookPage.css';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
 import { addReservationToFirestore } from '../firebase/firestore';
 import { useState } from 'react';
@@ -24,11 +24,11 @@ function BookPage() {
   const restaurant = RESTAURANTS.find((res) => {
     return res.name === searchParamsObj.restaurant;
   });
-
+  
+  // Booking the reservation with Firestore function addReservationToFirestore().
   const [isLoading, setIsLoading] = useState(false);
   const [isReserved, setIsReserved] = useState(false);
 
-  // Booking the reservation with Firestore function addReservationToFirestore().
   async function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
@@ -36,6 +36,7 @@ function BookPage() {
       {
         username: event.target.username.value,
         email: event.target.email.value,
+        uid: user ? user.uid : null,
         ...searchParamsObj
       };
     console.log(reservationInfos);
@@ -43,6 +44,9 @@ function BookPage() {
     setIsReserved(true);
     setIsLoading(false);
   }
+
+  // Retrieving user object from OutletContext.
+  const user = useOutletContext();
 
   return (
     <div className="book-page">
@@ -52,7 +56,11 @@ function BookPage() {
       ? 
       <ReservationCompletedShow />
       :
-      <AddDetailForm onSubmit={onSubmit} isLoading={isLoading} />
+      <AddDetailForm 
+        onSubmit={onSubmit} 
+        isLoading={isLoading}
+        user={user} 
+      />
       }
     </div>
   );
@@ -95,16 +103,33 @@ function BookShowSlot({ slot }) {
   );
 }
 
-function AddDetailForm({ onSubmit, isLoading }) {
+function AddDetailForm({ onSubmit, isLoading, user }) {
+  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
+
   return (
     <form className="add-detail-form" onSubmit={onSubmit}>
       <p className="add-detail-form-title">Add your reservation details</p>
-      <LoginLine />
+      {user ? null : <LoginLine />}
       <label>Username
-        <input type="text" placeholder="Username" name="username" required />
+        <input 
+          type="text" 
+          placeholder="Username" 
+          name="username" 
+          required 
+          defaultValue={user ? user.displayName : username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
       </label>
       <label>Email address
-        <input type="email" placeholder="Email address" name="email" required />
+        <input 
+          type="email" 
+          placeholder="Email address" 
+          name="email" 
+          required 
+          defaultValue={user ? user.email : email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </label>
       <button 
         type="submit"
