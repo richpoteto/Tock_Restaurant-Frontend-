@@ -5,6 +5,7 @@ import App from './App';
 import BookPage from './components/BookPage';
 import HomePage from './components/HomePage';
 import { ForgotpasswordPage, LoginPage, SignupPage } from './components/LoginPage';
+import ProfilePage from './components/ProfilePage';
 import RestaurantPage from './components/RestaurantPage';
 import SearchPage from './components/SearchPage';
 
@@ -21,16 +22,23 @@ root.render(
           </Route>
           <Route path='search' element={<SearchPage />} />
           <Route path='book' element={<BookPage />} />
+          <Route path='profile' element={<ProfilePage />} />
         </Route>
-        <Route path='/login' element={<App simpleHeader={true} />}>
+        {/* <Route path='/login' element={<App simpleHeader={true} />}>
           <Route index element={<LoginPage />} />
+        </Route> */}
+        <Route path='/' element={<App simpleHeader={true} />}>
+          <Route index element={<LoginPage />} />
+          <Route path='login' element={<LoginPage />} />
+          <Route path='signup' element={<SignupPage />} />
+          <Route path='forgotpassword' element={<ForgotpasswordPage />} />
         </Route>
-        <Route path='/signup' element={<App simpleHeader={true} />}>
+        {/* <Route path='/signup' element={<App simpleHeader={true} />}>
           <Route index element={<SignupPage />} />
-        </Route>
-        <Route path='/forgotpassword' element={<App simpleHeader={true} />}>
+        </Route> */}
+        {/* <Route path='/forgotpassword' element={<App simpleHeader={true} />}>
           <Route index element={<ForgotpasswordPage />} />
-        </Route>
+        </Route> */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
