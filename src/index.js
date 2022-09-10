@@ -24,15 +24,15 @@ root.render(
           <Route path='book' element={<BookPage />} />
           <Route path='profile' element={<ProfilePage />} />
         </Route>
-        {/* <Route path='/login' element={<App simpleHeader={true} />}>
-          <Route index element={<LoginPage />} />
-        </Route> */}
         <Route path='/' element={<App simpleHeader={true} />}>
           <Route index element={<LoginPage />} />
           <Route path='login' element={<LoginPage />} />
           <Route path='signup' element={<SignupPage />} />
           <Route path='forgotpassword' element={<ForgotpasswordPage />} />
         </Route>
+        {/* <Route path='/login' element={<App simpleHeader={true} />}>
+          <Route index element={<LoginPage />} />
+        </Route> */}
         {/* <Route path='/signup' element={<App simpleHeader={true} />}>
           <Route index element={<SignupPage />} />
         </Route> */}

@@ -125,6 +125,13 @@ function CuisineBtn({ cuisine, onClickOutside }) {
 }
 
 function HeaderUser({ user }) {
+  // Navigate to ProfilePage when the profile photo is clicked.
+  let navigate = useNavigate();
+  
+  function onClickProfile() {
+    navigate("/profile");
+  }
+
   if (!user) {
     return (
       <div className="header-user">
@@ -135,7 +142,7 @@ function HeaderUser({ user }) {
   } else {
     return (
       <div>
-        <button className="header-user logged-in">
+        <button className="header-user logged-in" onClick={onClickProfile}>
           { 
             user.photoURL 
             ? 
