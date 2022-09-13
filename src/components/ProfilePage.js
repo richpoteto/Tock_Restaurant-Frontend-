@@ -9,14 +9,14 @@ function ProfilePage() {
   // Retrieving user object from OutletContext.
   const user = useOutletContext();
 
-  // If user is null, then navigate to homepage.
-  let navigate = useNavigate();
-  useEffect(() => {
-    if (!user) {
-      navigate('/home');
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  // // If user is null, then navigate to homepage.
+  // let navigate = useNavigate();
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate('/home');
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [user]);
 
 
   return (
@@ -133,7 +133,7 @@ function ReservationsList({ user, sidenavClicked }) {
       onClickPast();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sidenavClicked]);
+  }, [sidenavClicked, user]);
 
   return (
     <div className="reservations-list">
