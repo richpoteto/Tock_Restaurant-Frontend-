@@ -1,37 +1,211 @@
 .profile-page {
-  width: 80%;
-  max-width: 700px;
+  width: 100%;
+  /* max-width: 1000px; */
   align-self: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-show-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 128px;
+  box-shadow: 0 1px 2px var(--inner-shadow-white);
 }
 
 .profile-show {
+  /* width: 100%; */
+  /* max-width: 1000px; */
+  margin-top: 64px;
+  padding: 0 128px 64px 128px;
+  /* margin: 64px 0; */
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  /* box-shadow: 0 1px 2px var(--inner-shadow-white); */
+  max-width: 1000px;
+  width: 100%;
+}
 
+.profile-show-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .username-show {
+  font-size: 3rem;
+  font-weight: bold;
+}
 
+.profile-show-left-btns {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
 }
 
 .edit-profile-btn {
+  width: 100%;
+  min-width: max-content;
+  font-family: inherit;
+  font-size: 1rem;
+  background-color: white;
+  color: black;
+  /* color: var(--blue); */
+  border: 1px solid var(--border-white);
+  /* border: 1px solid var(--blue); */
+  padding: 8px 30px;
+  border-radius: 24px;
+}
 
+.edit-profile-btn.log-out {
+  background-color: var(--blue);
+  /* background-color: white; */
+  color: white;
+  /* color: var(--blue); */
+  border: 1px solid var(--blue);
+}
+
+.edit-profile-btn:hover {
+  cursor: pointer;
+  background-color: var(--hover-white);
+  box-shadow: inset 0 -1px 0 0 var(--inner-shadow-white);
+}
+
+.edit-profile-btn.log-out:hover {
+  cursor: pointer;
+  background-color: var(--hover-blue);
+  /* background-color: var(--hover-white); */
+  box-shadow: inset 0 -1px 0 0 var(--inner-shadow-blue);
 }
 
 .profile-photo {
+  /* width: 200px;
+  height: 200px;
+  border-radius: 100px; */
+}
 
+.profile-photo img {
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  outline: 6px solid var(--border-white);
+}
+
+.profile-photo .material-symbols-outlined {
+  width: 200px;
+  height: 200px;
+  font-size: 220px;
+  font-weight: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reservations-show {
+  margin-top: 32px;
+  padding: 0 128px 64px 128px;
+  align-self: center;
+  max-width: 1000px;
+  width: 100%;
+}
 
+.reservations-show-header {
+  font-weight: 500;
+}
+
+.reservations-show-main {
+  display: flex;
+  gap: 150px;
 }
 
 .reservations-sidenav {
-  
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reservations-sidenav-btn {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: white;
+  border: none;
+  padding: 4px 16px 4px 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.reservations-sidenav-btn.clicked,
+.reservations-sidenav-btn:hover {
+  cursor: pointer;
+  color: var(--blue);
+  text-decoration: underline 2px;
 }
 
 .reservations-list {
-
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .reservation-card {
+  border: 1px solid var(--border-white);
+  border-radius: 3px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  height: 140px;
+  max-width: 700px;
+}
 
+.reservation-card img {
+  border-radius: 3px;
+  height: 100%;
+}
+
+.reservation-card-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.reservation-card-main-restaurant-name {
+  margin-top: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--blue);
+}
+
+.reservation-card-main-restaurant-name:hover {
+  cursor: pointer;
+  color: var(--darkblue);
+}
+
+.reservation-card-main-restaurant-name:focus-visible {
+  outline: 2px solid var(--focus-outline-blue);
+  outline-offset: 3px;
+}
+
+.reservation-card-show {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reservation-card-show-info {
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: max-content;
+}
+
+.edit-profile-btn:focus-visible,
+.reservations-sidenav-btn:focus-visible {
+  outline: 2px solid var(--focus-outline-blue);
+  outline-offset: 3px;
 }

@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc, where } from "firebase/firestore";
 import { RESTAURANTS } from "../resources/data/RESTAURANTS";
 
 // Initialize Cloud Firestore and get a reference to the service.
@@ -59,8 +59,8 @@ async function addReservationUnderUserTFS(reservationData) {
   await setDoc(doc(reservationsRef), {
     restaurant: reservationData.restaurant,
     date: reservationData.date,
-    hour: reservationData.hour,
-    partySize: reservationData.partySize
+    hour: Number(reservationData.hour),
+    partySize: Number(reservationData.partySize)
   });
   console.log("addReservationUnderUserTFS ran once.");
 }
@@ -84,9 +84,38 @@ async function checkAddNewUserToFS(user) {
   }
 }
 
+// Get this user's upcoming reservations, where date is equal or later than dateString, sorted by date and hour.
+async function getUserUpcomingReservationsFFS(uid, dateString) {
+  let reservations = [];
+  const reservationsRef = collection(db, "users", uid, "reservations");
+  const q = query(reservationsRef, where("date", ">=", dateString), orderBy("date"), orderBy("hour"));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    reservations.push(doc.data());
+  });
+  console.log("reservations fetched: " + reservations);
+  return reservations;
+}
+
+async function getUserPastReservationsFFS(uid, dateString) {
+  let reservations = [];
+  const reservationsRef = collection(db, "users", uid, "reservations");
+  const q = query(reservationsRef, where("date", "<", dateString), orderBy("date", "desc"), orderBy("hour"));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    reservations.push(doc.data());
+  });
+  console.log("reservations fetched: " + reservations);
+  return reservations;
+}
+
 export { 
   addRESTAURANTSToFirestore, 
   getBookedTimeSlotsOnDateForRestaurantFromFirestore, 
   addReservationToFirestore,
-  checkAddNewUserToFS
+  checkAddNewUserToFS,
+  getUserUpcomingReservationsFFS,
+  getUserPastReservationsFFS
 };

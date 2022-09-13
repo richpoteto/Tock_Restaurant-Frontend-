@@ -3,7 +3,6 @@ import '../styles/Header.css';
 import { CUISINES } from '../resources/data/RESTAURANTS';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { signOutUser } from '../firebase/firebaseAuth';
 
 // Custom Hook for the CuisineSearchBtn and CuisineSelect alternating mechanism.
 function useOutsideClick(ref, callback) {
@@ -127,7 +126,7 @@ function CuisineBtn({ cuisine, onClickOutside }) {
 function HeaderUser({ user }) {
   // Navigate to ProfilePage when the profile photo is clicked.
   let navigate = useNavigate();
-  
+
   function onClickProfile() {
     navigate("/profile");
   }
@@ -151,7 +150,6 @@ function HeaderUser({ user }) {
             <span className="material-symbols-outlined">account_circle</span>
           }
         </button>
-        <button onClick={signOutUser}>signout</button>
       </div>
 
     )

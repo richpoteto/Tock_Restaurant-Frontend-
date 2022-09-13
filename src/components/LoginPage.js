@@ -1,7 +1,7 @@
 import '../styles/LoginPage.css';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { registerWithEmailPassword, signOutUser, userSigninWithEmailPassword, updateUserNameAndPhoto, sendPasswordRecoveryEmail, registerWithPartnersPopup } from '../firebase/firebaseAuth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function LoginPage() {
   // Retrieving user object from OutletContext.
@@ -15,7 +15,7 @@ function LoginPage() {
         <BreakLine />
         <LoginForm />
         <FormChange signingUp={false} />
-        <button onClick={signOutUser}>log out</button>
+        {/* <button onClick={signOutUser}>log out</button> */}
       </div>
     );
   } else {
@@ -240,11 +240,12 @@ function FormChange({ signingUp }) {
 function RedirectToHome() {
   let navigate = useNavigate();
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigate(-1);
-  //   }, 2000);
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      navigate(-1);
+    }, 2000);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function onClickPreviousPage() {
     navigate(-1);
@@ -255,7 +256,7 @@ function RedirectToHome() {
       <p>You are signed in.</p>
       <p>Redirecting to previous page ...</p>
       <button onClick={onClickPreviousPage}>Click here if not redirected</button>
-      <button onClick={signOutUser}>log out</button>
+      {/* <button onClick={signOutUser}>log out</button> */}
     </div>
   )
 }
