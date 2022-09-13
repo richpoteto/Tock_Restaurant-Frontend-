@@ -54,9 +54,7 @@ function ProfileShow({ user }) {
 function ProfilePhoto({ photoURL }) {
   return (
     <div className="profile-photo">
-      {
-        photoURL 
-        ? 
+      { photoURL ? 
         <img src={photoURL} alt="User Profile Avatar" />
         : 
         <span className="material-symbols-outlined">account_circle</span>
@@ -139,14 +137,18 @@ function ReservationsList({ user, sidenavClicked }) {
     <div className="reservations-list">
       {reservationsList.map((reservation, index) => {
         return (
-          <ReservationCard reservation={reservation} key={index} />
+          <ReservationCard 
+            reservation={reservation} 
+            key={index}
+            sidenavClicked={sidenavClicked} 
+          />
         );
       })}
     </div>
   );
 }
 
-function ReservationCard({ reservation }) {
+function ReservationCard({ reservation, sidenavClicked }) {
   // Retrieve the restaurant object with reservation.restaurant.
   const restaurant = RESTAURANTS.find((res) => {
     return res.name === reservation.restaurant;
@@ -160,23 +162,35 @@ function ReservationCard({ reservation }) {
   return (
     <div className="reservation-card">
       <div className="reservation-card-main">
-        <h4 className="reservation-card-main-restaurant-name" onClick={onClickRestaurantName}>{restaurant.name}</h4>
-        <div className="reservation-card-show">
-          <p className="reservation-card-show-info">
-            <span className="material-symbols-outlined">calendar_month</span>
-            <span>{reservation.date}</span>
-          </p>
-          <p className="reservation-card-show-info">
-            <span className="material-symbols-outlined">schedule</span>
-            <span>{`${reservation.hour}:00`}</span>
-          </p>
-          <p className="reservation-card-show-info">
-            <span className="material-symbols-outlined">group</span>
-            <span>{`${reservation.partySize} guests`}</span>
-          </p>
+        <div className="reservation-card-main-show">
+          <h4 className="reservation-card-main-restaurant-name" 
+            onClick={onClickRestaurantName}
+          >
+            {restaurant.name}
+          </h4>
+          <div className="reservation-card-show">
+            <p className="reservation-card-show-info">
+              <span className="material-symbols-outlined">calendar_month</span>
+              <span>{reservation.date}</span>
+            </p>
+            <p className="reservation-card-show-info">
+              <span className="material-symbols-outlined">schedule</span>
+              <span>{`${reservation.hour}:00`}</span>
+            </p>
+            <p className="reservation-card-show-info">
+              <span className="material-symbols-outlined">group</span>
+              <span>{`${reservation.partySize} guests`}</span>
+            </p>
+          </div>
+        </div>
+        <div className="reservation-card-btns-row">
+          { sidenavClicked === 0 ? 
+            <button className="reservation-card-btn">Cancel</button> :
+            <button className="reservation-card-btn">Book again</button> 
+          }
         </div>
       </div>
-      <img src={restaurant.photoURL} alt={restaurant.restaurant} />
+      <img className="reservation-card-main-img" src={restaurant.photoURL} alt={restaurant.restaurant} />
     </div>
   );
 }

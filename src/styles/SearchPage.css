@@ -78,7 +78,7 @@
 .result-show {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   gap: 32px;
 }
 
@@ -95,6 +95,7 @@
   display: flex;
   flex-direction: column;
   width: 320px;
+  border-bottom: 1px solid var(--border-white);
 }
 
 .result-show-name {
@@ -116,10 +117,7 @@
 }
 
 .booking-card {
-  padding: 16px;
-  padding-bottom: 8px;
-  /* border: 1px solid var(--border-white); */
-  /* box-shadow: 0 1px 2px var(--inner-shadow-white); */
+  padding: 0 16px 8px 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
