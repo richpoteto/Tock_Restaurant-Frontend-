@@ -22,7 +22,7 @@ function useOutsideClick(ref, callback) {
   }, [ref, callback]);
 }
 
-function Header({ user }) {
+function Header({ user, headerBoxShadow }) {
   const [cuisineSelectOn, setCuisineSelectOn] = useState(false);
 
   function onClickCuisineSearchBtn(event) {
@@ -39,7 +39,7 @@ function Header({ user }) {
   useOutsideClick(cuisineSearchBtnRef, onClickOutside);
 
   return (
-    <div className="header">
+    <div className={ headerBoxShadow ? "header" : "header no-boxshadow" }>
       <div className="header-show-search-container">
         <HeaderShow />
         {cuisineSelectOn ? 

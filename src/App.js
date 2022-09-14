@@ -6,7 +6,7 @@ import { auth } from './firebase/firebaseAuth';
 import { checkAddNewUserToFS } from './firebase/firestore';
 import './styles/App.css';
 
-function App({ simpleHeader }) {
+function App({ simpleHeader, headerBoxShadow }) {
   // Passing current user object(logged-in or not) with useOutletContext() and context.
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -27,7 +27,11 @@ function App({ simpleHeader }) {
 
   return (
     <div className="App">
-      {simpleHeader ? <HeaderSimple /> : <Header user={user} />}
+      { simpleHeader ? 
+        <HeaderSimple /> 
+        : 
+        <Header user={user} headerBoxShadow={headerBoxShadow} />
+      }
       <Outlet context={user} />
     </div>
   );

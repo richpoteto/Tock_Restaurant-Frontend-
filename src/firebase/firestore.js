@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { collection, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { RESTAURANTS } from "../resources/data/RESTAURANTS";
 
 // Initialize Cloud Firestore and get a reference to the service.
@@ -24,7 +24,7 @@ async function addRestaurantDataToFirestore(restaurantData) {
 async function getBookedTimeSlotsOnDateForRestaurantFromFirestore(qRestaurantName, qDate) {
   const bookedSlots = [];
   const reservationsRef = collection(db, "restaurants", qRestaurantName, "reservations");
-  const q = query(reservationsRef, where("date", "==", qDate));
+  const q = query(reservationsRef, where("date", "==", qDate), where("cancelled", "==", false));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     // console.log(doc.id, " => ", doc.data());
@@ -36,7 +36,7 @@ async function getBookedTimeSlotsOnDateForRestaurantFromFirestore(qRestaurantNam
 
 // Post reservation data to Firestore, under this restaurant's "reservations" collection,
 // the other one under individual user's "reservations" collection.
-// Data includes restaurant, date, hour, partySize, username, email and uid.
+// Data includes restaurant(under user's collection), date, hour, partySize, username, email, uid and cancelled.
 async function addReservationToFirestore(reservationData) {
   const reservationsRef = collection(db, "restaurants", reservationData.restaurant, "reservations");
   await setDoc(doc(reservationsRef), {
@@ -45,7 +45,8 @@ async function addReservationToFirestore(reservationData) {
     partySize: Number(reservationData.partySize),
     username: reservationData.username,
     email: reservationData.email,
-    uid: reservationData.uid
+    uid: reservationData.uid,
+    cancelled : false,
   });
   // Add this reservation data to this user's own "reservations" collection if it has uid.
   if (reservationData.uid) {
@@ -60,7 +61,8 @@ async function addReservationUnderUserTFS(reservationData) {
     restaurant: reservationData.restaurant,
     date: reservationData.date,
     hour: Number(reservationData.hour),
-    partySize: Number(reservationData.partySize)
+    partySize: Number(reservationData.partySize),
+    cancelled: false,
   });
   console.log("addReservationUnderUserTFS ran once.");
 }
@@ -88,27 +90,75 @@ async function checkAddNewUserToFS(user) {
 async function getUserUpcomingReservationsFFS(uid, dateString) {
   let reservations = [];
   const reservationsRef = collection(db, "users", uid, "reservations");
-  const q = query(reservationsRef, where("date", ">=", dateString), orderBy("date"), orderBy("hour"));
+  const q = query(reservationsRef, 
+    where("date", ">=", dateString), where("cancelled", "==", false), orderBy("date"), orderBy("hour"));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    reservations.push(doc.data());
+    const reservationObj = {
+      reservationID: doc.id,
+      ...doc.data(),
+    };
+    reservations.push(reservationObj);
   });
-  console.log("reservations fetched: " + reservations);
+  console.log("upcoming reservations fetched: " + reservations);
   return reservations;
 }
 
+// Get this user's past reservations, where date is earlier than dateString, sorted by descending date and hour.
 async function getUserPastReservationsFFS(uid, dateString) {
   let reservations = [];
   const reservationsRef = collection(db, "users", uid, "reservations");
   const q = query(reservationsRef, where("date", "<", dateString), orderBy("date", "desc"), orderBy("hour"));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    reservations.push(doc.data());
+    const reservationObj = {
+      reservationID: doc.id,
+      ...doc.data(),
+    };
+    reservations.push(reservationObj);
   });
-  console.log("reservations fetched: " + reservations);
+  console.log("past reservations fetched: " + reservations);
   return reservations;
+}
+
+// Get this user's cancelled reservations, where cancelled is true, sorted by descending date and hour.
+async function getUserCancelledReservationsFFS(uid) {
+  let reservations = [];
+  const reservationsRef = collection(db, "users", uid, "reservations");
+  const q = query(reservationsRef, where("cancelled", "==", true), orderBy("date", "desc"), orderBy("hour"));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    const reservationObj = {
+      reservationID: doc.id,
+      ...doc.data(),
+    };
+    reservations.push(reservationObj);
+  });
+  console.log("cancelled reservations fetched: " + reservations);
+  return reservations;
+}
+
+// Cancel this reservation, first from user's collection, then from the restaurant's collection.
+async function cancelReservationTFS(reservationData, user) {
+  const reservationUserRef = doc(db, "users", user.uid, "reservations", reservationData.reservationID);
+  const docSnap = await getDoc(reservationUserRef);
+  if (docSnap.exists()) {
+    console.log("Reservation", reservationData.reservationID, "found. Cancelling it now...");
+    await updateDoc(reservationUserRef, { cancelled: true});
+    console.log("Reservation", reservationData.reservationID, "cancelled in user's collection.");
+    console.log("Cancelling it in restaurant's collection now...");
+    const reservationsRestaurantRef = collection(db, "restaurants", reservationData.restaurant, "reservations");
+    const q = query(reservationsRestaurantRef, 
+      where("uid", "==", user.uid), where("date", "==", reservationData.date), where("hour", "==", reservationData.hour));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (docu) => {
+      const reservationRestaurantRef = doc(db, "restaurants", reservationData.restaurant, "reservations", docu.id);
+      await updateDoc(reservationRestaurantRef, {cancelled: true});
+      console.log("Reservation in restaurant cancelled.");
+    });
+  } else {
+    console.log("Reservation not found.");
+  }
 }
 
 export { 
@@ -117,5 +167,7 @@ export {
   addReservationToFirestore,
   checkAddNewUserToFS,
   getUserUpcomingReservationsFFS,
-  getUserPastReservationsFFS
+  getUserPastReservationsFFS,
+  getUserCancelledReservationsFFS,
+  cancelReservationTFS
 };

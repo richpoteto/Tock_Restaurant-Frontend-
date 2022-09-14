@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { signOutUser } from "../firebase/firebaseAuth";
-import { getUserPastReservationsFFS, getUserUpcomingReservationsFFS } from "../firebase/firestore";
+import { cancelReservationTFS, getUserCancelledReservationsFFS, getUserPastReservationsFFS, getUserUpcomingReservationsFFS } from "../firebase/firestore";
 import { RESTAURANTS } from "../resources/data/RESTAURANTS";
 import "../styles/ProfilePage.css";
 
@@ -124,31 +124,47 @@ function ReservationsList({ user, sidenavClicked }) {
     setReservationsList(reservationsArray);
   }
 
+  async function onClickCancelled() {
+    const reservationsArray = await getUserCancelledReservationsFFS(user.uid);
+    setReservationsList(reservationsArray);
+  }
+
   useEffect(() => {
     if (sidenavClicked === 0) {
       onClickUpcoming();
     } else if (sidenavClicked === 1) {
       onClickPast();
+    } else if (sidenavClicked === 2) {
+      onClickCancelled();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sidenavClicked, user]);
 
-  return (
-    <div className="reservations-list">
-      {reservationsList.map((reservation, index) => {
-        return (
-          <ReservationCard 
-            reservation={reservation} 
-            key={index}
-            sidenavClicked={sidenavClicked} 
-          />
-        );
-      })}
-    </div>
-  );
+  if (reservationsList.length) {
+    return (
+      <div className="reservations-list">
+        {reservationsList.map((reservation, index) => {
+          return (
+            <ReservationCard 
+              reservation={reservation} 
+              key={index}
+              sidenavClicked={sidenavClicked}
+              user={user}
+            />
+          );
+        })}
+      </div>
+    ); 
+  } else {
+    return (
+      <div className="reservations-list">
+        <EmptyReservationCard />
+      </div>
+    );
+  }
 }
 
-function ReservationCard({ reservation, sidenavClicked }) {
+function ReservationCard({ reservation, sidenavClicked, user }) {
   // Retrieve the restaurant object with reservation.restaurant.
   const restaurant = RESTAURANTS.find((res) => {
     return res.name === reservation.restaurant;
@@ -157,6 +173,11 @@ function ReservationCard({ reservation, sidenavClicked }) {
   let navigate = useNavigate();
   function onClickRestaurantName() {
     navigate(`/restaurant/${restaurant.name}`);
+  }
+
+  function onClickCancel() {
+    cancelReservationTFS(reservation, user);
+    window.location.reload();
   }
 
   return (
@@ -185,12 +206,33 @@ function ReservationCard({ reservation, sidenavClicked }) {
         </div>
         <div className="reservation-card-btns-row">
           { sidenavClicked === 0 ? 
-            <button className="reservation-card-btn">Cancel</button> :
-            <button className="reservation-card-btn">Book again</button> 
+            <button className="reservation-card-btn" onClick={onClickCancel}>Cancel</button> :
+            <button className="reservation-card-btn" onClick={onClickRestaurantName}>Book again</button> 
           }
         </div>
       </div>
       <img className="reservation-card-main-img" src={restaurant.photoURL} alt={restaurant.restaurant} />
+    </div>
+  );
+}
+
+function EmptyReservationCard() {
+  let navigate = useNavigate();
+
+  function onClickExploreNow() {
+    navigate('/home');
+  }
+
+  return (
+    <div className="reservation-card">
+      <div className="reservation-card-main empty">
+        <h3 className="reservation-card-main-empty-header">
+          No reservations yet.
+        </h3>
+        <div className="reservation-card-btns-row">
+          <button className="reservation-card-btn" onClick={onClickExploreNow}>Explore now</button>
+        </div>
+      </div>
     </div>
   );
 }

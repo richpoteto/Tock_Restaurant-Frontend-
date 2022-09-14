@@ -11,6 +11,10 @@
   z-index: 99;
 }
 
+.header.no-boxshadow {
+  box-shadow: none;
+}
+
 .header-show-search-container {
   display: flex;
   align-items: center;

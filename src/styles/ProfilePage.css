@@ -1,25 +1,25 @@
 .profile-page {
   width: 100%;
-  /* max-width: 1000px; */
   align-self: center;
   display: flex;
   flex-direction: column;
+  background-color: var(--hover-white);
+    /* minus header 100px and padding-bottom 64px */
+  min-height: calc(100vh - 164px); 
+  padding-bottom: 64px;
 }
 
 .profile-show-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding: 0 128px; */
   box-shadow: 0 1px 2px var(--inner-shadow-white);
+  background-color: white;
 }
 
 .profile-show {
-  /* width: 100%; */
-  /* max-width: 1000px; */
   margin-top: 64px;
   padding: 0 0 64px 0;
-  /* margin: 64px 0; */
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -98,7 +98,6 @@
 
 .reservations-show {
   margin-top: 32px;
-  /* padding: 0 128px 64px 128px; */
   align-self: center;
   max-width: 1000px;
   width: 90%;
@@ -123,7 +122,7 @@
   font-family: inherit;
   font-size: 1rem;
   font-weight: 500;
-  background-color: white;
+  background-color: transparent;
   border: none;
   padding: 4px 16px 4px 0;
   display: flex;
@@ -153,6 +152,8 @@
   gap: 48px;
   height: 200px;
   max-width: 700px;
+  background-color: white;
+  box-shadow: 0 2px 4px var(--inner-shadow-white);
 }
 
 .reservation-card-main {
@@ -209,9 +210,9 @@
   min-width: max-content;
 }
 
-.reservation-card-btns-row {
+/* .reservation-card-btns-row {
 
-}
+} */
 
 .reservation-card-btn {
   font-family: inherit;
@@ -229,13 +230,14 @@
   box-shadow: inset 0 -1px 0 0 var(--inner-shadow-blue);
 }
 
-.reservation-card-btn:focus-visible {
-  outline: 2px solid var(--focus-outline-blue);
-  outline-offset: 3px;
+.reservation-card-main.empty {
+  justify-content: center;
+  align-items: center;
 }
 
 .edit-profile-btn:focus-visible,
-.reservations-sidenav-btn:focus-visible {
+.reservations-sidenav-btn:focus-visible,
+.reservation-card-btn:focus-visible {
   outline: 2px solid var(--focus-outline-blue);
   outline-offset: 3px;
 }

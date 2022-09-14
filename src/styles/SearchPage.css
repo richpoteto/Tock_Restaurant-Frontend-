@@ -1,10 +1,12 @@
 .search-page {
   width: 100%;
-  /* max-width: 700px; */
   align-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: var(--hover-white);
+  /* minus header 100px  */
+  min-height: calc(100vh - 100px); 
 }
 
 .filters-container {
@@ -55,12 +57,12 @@
 .results-list {
   max-width: 700px;
   margin: 24px 0;
-  border: 1px solid var(--border-white);
-  border-radius: 3px;
+  /* border: 1px solid var(--border-white); */
+  /* border-radius: 3px; */
   display: flex;
   flex-direction: column;
   gap: 32px;
-  background-color: var(--hover-white);
+  /* background-color: var(--hover-white); */
   padding: 32px;
 }
 
