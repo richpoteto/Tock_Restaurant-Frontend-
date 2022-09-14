@@ -130,7 +130,7 @@ function ReservationsList({ user, sidenavClicked }) {
   }
 
   useEffect(() => {
-    if (sidenavClicked === 0) {
+    if (user && sidenavClicked === 0) {
       onClickUpcoming();
     } else if (sidenavClicked === 1) {
       onClickPast();
@@ -175,9 +175,9 @@ function ReservationCard({ reservation, sidenavClicked, user }) {
     navigate(`/restaurant/${restaurant.name}`);
   }
 
-  function onClickCancel() {
-    cancelReservationTFS(reservation, user);
-    window.location.reload();
+  async function onClickCancel() {
+    await cancelReservationTFS(reservation, user);
+    // window.location.reload();
   }
 
   return (

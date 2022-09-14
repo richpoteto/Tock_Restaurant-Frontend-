@@ -35,7 +35,8 @@ async function getBookedTimeSlotsOnDateForRestaurantFromFirestore(qRestaurantNam
 }
 
 // Batched writes this reservation from an user to both restaurant's reservations collection,
-// and user's own reservations collection.
+// and user's own reservations collection. And then adding user's reservations collection's reservationID
+// to restaurant's reservation.
 async function addRigisteredUserReservationTFS(reservationData) {
   const data = {
     restaurant: reservationData.restaurant,
@@ -46,7 +47,7 @@ async function addRigisteredUserReservationTFS(reservationData) {
     email: reservationData.email,
     uid: reservationData.uid,
     cancelled : false,
-    createdAt: serverTimestamp(),
+    createdAt: new Date(),
   }
 
   const batch = writeBatch(db);
@@ -80,7 +81,7 @@ async function addUnrigisteredUserReservationTFS(reservationData) {
       email: reservationData.email,
       uid: reservationData.uid,
       cancelled : false,
-      createdAt: serverTimestamp(),
+      createdAt: new Date(),
     });
     console.log("Reservation made by unregistered user", reservationData.email, "successfully added.");
   } catch(error) {
@@ -119,9 +120,10 @@ async function getUserUpcomingReservationsFFS(uid, dateString) {
       reservationID: doc.id,
       ...doc.data(),
     };
+    // console.log(reservationObj);
     reservations.push(reservationObj);
   });
-  console.log("upcoming reservations fetched: " + reservations);
+  console.log("Upcoming reservations fetched: " + reservations);
   return reservations;
 }
 
@@ -138,7 +140,7 @@ async function getUserPastReservationsFFS(uid, dateString) {
     };
     reservations.push(reservationObj);
   });
-  console.log("past reservations fetched: " + reservations);
+  console.log("Past reservations fetched: " + reservations);
   return reservations;
 }
 
@@ -155,7 +157,7 @@ async function getUserCancelledReservationsFFS(uid) {
     };
     reservations.push(reservationObj);
   });
-  console.log("cancelled reservations fetched: " + reservations);
+  console.log("Cancelled reservations fetched: " + reservations);
   return reservations;
 }
 
@@ -164,16 +166,15 @@ async function cancelReservationTFS(reservationData, user) {
   const reservationUserRef = doc(db, "users", user.uid, "reservations", reservationData.reservationID);
   const docSnap = await getDoc(reservationUserRef);
   if (docSnap.exists()) {
-    console.log("Reservation", reservationData.reservationID, "found. Cancelling it now...");
+    // console.log("Reservation", reservationData.reservationID, "found. Cancelling it now...");
     await updateDoc(reservationUserRef, { cancelled: true});
     console.log("Reservation", reservationData.reservationID, "cancelled in user's collection.");
-    console.log("Cancelling it in restaurant's collection now...");
+    // console.log("Cancelling it in restaurant's collection now...");
     const reservationsRestaurantRef = collection(db, "restaurants", reservationData.restaurant, "reservations");
-    const q = query(reservationsRestaurantRef, 
-      where("uid", "==", user.uid), where("date", "==", reservationData.date), where("hour", "==", reservationData.hour));
+    const q = query(reservationsRestaurantRef, where("createdAt", "==", reservationData.createdAt));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (docu) => {
-      const reservationRestaurantRef = doc(db, "restaurants", reservationData.restaurant, "reservations", docu.id);
+    querySnapshot.forEach(async (d) => {
+      const reservationRestaurantRef = doc(db, "restaurants", reservationData.restaurant, "reservations", d.id);
       await updateDoc(reservationRestaurantRef, {cancelled: true});
       console.log("Reservation in restaurant cancelled.");
     });
