@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# Toock - a tock mock
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This Toock app was created with React and Firebase, from ground up by myself alone. It is a mock for Tock, a restaurant-booking app that I really liked. This project took me quite some time and hardworks to finish. I overcame some challenges and learnt a lot too.
 
-## Available Scripts
+#### Firebase Hosting Live: https://toock-32270.firebaseapp.com
 
-In the project directory, you can run:
+## Features
+- Searching for available time slots for a specific restaurant or cuisine.
+- Restaurant has its own page, also the ability to search for a time slot on the page.
+- Book the slot with only username and email when not logged in.
+- Sign up and log in with email and password.
+- Sign up and log in with Google.
+- Forgot password feature where a password reset email will be sent.
+- Once logged in, booking the slot no longer requires inputting username and email.
+- A nice profile page where you can see your upcoming, past and cancelled reservations.
+- Cancel a reservation on profile page.
 
-### `npm start`
+## Screenshots
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Home Page
+<img width="1007" alt="Screen Shot 2022-09-14 at 16 22 33" src="https://user-images.githubusercontent.com/97932191/190255957-28c2a079-fc71-4085-a751-6eef639d8048.png">
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Restaurant Page
+<img width="2240" alt="Screen Shot 2022-09-14 at 16 22 50" src="https://user-images.githubusercontent.com/97932191/190256034-e7a17d6f-f091-4a7c-920e-8538177fdec6.png">
 
-### `npm test`
+### Search Page
+<img width="2240" alt="Screen Shot 2022-09-14 at 16 23 25" src="https://user-images.githubusercontent.com/97932191/190256047-7cd4f369-6d05-4be2-9f18-9362b684c616.png">
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Profile Page
+<img width="2240" alt="Screen Shot 2022-09-14 at 16 24 22" src="https://user-images.githubusercontent.com/97932191/190256056-f5e40aab-876e-44d8-845a-6a8c22306acd.png">
 
-### `npm run build`
+### Sign up / Log in Page
+<img width="1607" alt="Screen Shot 2022-09-14 at 16 30 41" src="https://user-images.githubusercontent.com/97932191/190256400-6be08510-2f92-4217-8c3e-89aa78a511f8.png">
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Possible updates
+- Responsive design
+- Editing user's profile information and photo.
+- Fetching a newly registered user's previous reservations.
