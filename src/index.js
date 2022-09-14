@@ -32,15 +32,6 @@ root.render(
           <Route path='signup' element={<SignupPage />} />
           <Route path='forgotpassword' element={<ForgotpasswordPage />} />
         </Route>
-        {/* <Route path='/login' element={<App simpleHeader={true} />}>
-          <Route index element={<LoginPage />} />
-        </Route> */}
-        {/* <Route path='/signup' element={<App simpleHeader={true} />}>
-          <Route index element={<SignupPage />} />
-        </Route> */}
-        {/* <Route path='/forgotpassword' element={<App simpleHeader={true} />}>
-          <Route index element={<ForgotpasswordPage />} />
-        </Route> */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

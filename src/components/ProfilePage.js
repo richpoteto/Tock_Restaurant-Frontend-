@@ -150,6 +150,7 @@ function ReservationsList({ user, sidenavClicked }) {
               key={index}
               sidenavClicked={sidenavClicked}
               user={user}
+              onClickUpcoming={onClickUpcoming}
             />
           );
         })}
@@ -164,7 +165,7 @@ function ReservationsList({ user, sidenavClicked }) {
   }
 }
 
-function ReservationCard({ reservation, sidenavClicked, user }) {
+function ReservationCard({ reservation, sidenavClicked, user, onClickUpcoming }) {
   // Retrieve the restaurant object with reservation.restaurant.
   const restaurant = RESTAURANTS.find((res) => {
     return res.name === reservation.restaurant;
@@ -177,7 +178,7 @@ function ReservationCard({ reservation, sidenavClicked, user }) {
 
   async function onClickCancel() {
     await cancelReservationTFS(reservation, user);
-    // window.location.reload();
+    onClickUpcoming();
   }
 
   return (

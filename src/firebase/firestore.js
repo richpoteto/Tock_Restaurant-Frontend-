@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { collection, doc, getDoc, getDocs, getFirestore, orderBy, query, serverTimestamp, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
 import { RESTAURANTS } from "../resources/data/RESTAURANTS";
 
 // Initialize Cloud Firestore and get a reference to the service.
