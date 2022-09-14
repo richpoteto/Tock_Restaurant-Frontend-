@@ -14,11 +14,11 @@ function App({ simpleHeader, headerBoxShadow }) {
       if (!user) {
         // Set user to state if not null, where Outlet can pass it down as context.
         setUser(currentUser);
-        console.log("setUser ran once");
+        // console.log("setUser ran once");
       } else {
         // Checking whether currentUser is inside db, adding data if not.
         await checkAddNewUserToFS(currentUser);
-        console.log("addNewUserToFS ran once");
+        // console.log("addNewUserToFS ran once");
       }
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps

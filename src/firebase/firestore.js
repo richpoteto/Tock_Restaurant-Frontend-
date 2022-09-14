@@ -1,5 +1,5 @@
 import app from "./firebase";
-import { collection, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, orderBy, query, serverTimestamp, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
 import { RESTAURANTS } from "../resources/data/RESTAURANTS";
 
 // Initialize Cloud Firestore and get a reference to the service.
@@ -30,16 +30,15 @@ async function getBookedTimeSlotsOnDateForRestaurantFromFirestore(qRestaurantNam
     // console.log(doc.id, " => ", doc.data());
     bookedSlots.push(doc.data().hour);
   });
-  console.log("slots fetched: " + bookedSlots);
+  console.log("booked slots fetched: " + bookedSlots);
   return bookedSlots;
 }
 
-// Post reservation data to Firestore, under this restaurant's "reservations" collection,
-// the other one under individual user's "reservations" collection.
-// Data includes restaurant(under user's collection), date, hour, partySize, username, email, uid and cancelled.
-async function addReservationToFirestore(reservationData) {
-  const reservationsRef = collection(db, "restaurants", reservationData.restaurant, "reservations");
-  await setDoc(doc(reservationsRef), {
+// Batched writes this reservation from an user to both restaurant's reservations collection,
+// and user's own reservations collection.
+async function addRigisteredUserReservationTFS(reservationData) {
+  const data = {
+    restaurant: reservationData.restaurant,
     date: reservationData.date,
     hour: Number(reservationData.hour),
     partySize: Number(reservationData.partySize),
@@ -47,24 +46,46 @@ async function addReservationToFirestore(reservationData) {
     email: reservationData.email,
     uid: reservationData.uid,
     cancelled : false,
-  });
-  // Add this reservation data to this user's own "reservations" collection if it has uid.
-  if (reservationData.uid) {
-    await addReservationUnderUserTFS(reservationData);
+    createdAt: serverTimestamp(),
+  }
+
+  const batch = writeBatch(db);
+
+  // Write to restaurant's reservations collection.
+  const restaurantReservationsRef = collection(db, "restaurants", reservationData.restaurant, "reservations");
+  batch.set(doc(restaurantReservationsRef), data);
+
+  // Write to user's reservations collection.
+  const userReservationsRef = collection(db, "users", reservationData.uid, "reservations");
+  batch.set(doc(userReservationsRef), data);
+
+  try {
+    await batch.commit();
+    console.log("Reservation made by user", reservationData.email, "successfully added.");
+  } catch(error) {
+    console.error(error);
   }
 }
 
-// Post/add reservation data under this user's "reservations" collection via uid.
-async function addReservationUnderUserTFS(reservationData) {
-  const reservationsRef = collection(db, "users", reservationData.uid, "reservations");
-  await setDoc(doc(reservationsRef), {
-    restaurant: reservationData.restaurant,
-    date: reservationData.date,
-    hour: Number(reservationData.hour),
-    partySize: Number(reservationData.partySize),
-    cancelled: false,
-  });
-  console.log("addReservationUnderUserTFS ran once.");
+// Write this reservation from an unrigistered user to the restaurant's reservations collection.
+async function addUnrigisteredUserReservationTFS(reservationData) {
+  const reservationsRef = collection(db, "restaurants", reservationData.restaurant, "reservations");
+  try {
+    await setDoc(doc(reservationsRef), {
+      restaurant: reservationData.restaurant,
+      date: reservationData.date,
+      hour: Number(reservationData.hour),
+      partySize: Number(reservationData.partySize),
+      username: reservationData.username,
+      email: reservationData.email,
+      uid: reservationData.uid,
+      cancelled : false,
+      createdAt: serverTimestamp(),
+    });
+    console.log("Reservation made by unregistered user", reservationData.email, "successfully added.");
+  } catch(error) {
+    console.error(error);
+  }
 }
 
 // Post/add user data to Firestore, under "users" collection, with uid as doc
@@ -164,7 +185,8 @@ async function cancelReservationTFS(reservationData, user) {
 export { 
   addRESTAURANTSToFirestore, 
   getBookedTimeSlotsOnDateForRestaurantFromFirestore, 
-  addReservationToFirestore,
+  addUnrigisteredUserReservationTFS,
+  addRigisteredUserReservationTFS,
   checkAddNewUserToFS,
   getUserUpcomingReservationsFFS,
   getUserPastReservationsFFS,

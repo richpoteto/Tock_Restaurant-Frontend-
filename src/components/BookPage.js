@@ -1,7 +1,7 @@
 import '../styles/BookPage.css';
 import { Link, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
 import { RESTAURANTS } from '../resources/data/RESTAURANTS';
-import { addReservationToFirestore } from '../firebase/firestore';
+import { addRigisteredUserReservationTFS, addUnrigisteredUserReservationTFS } from '../firebase/firestore';
 import { useState } from 'react';
 import Spinner from './Spinner';
 
@@ -25,22 +25,29 @@ function BookPage() {
     return res.name === searchParamsObj.restaurant;
   });
   
-  // Booking the reservation with Firestore function addReservationToFirestore().
+  // Booking the reservation with Firestore function addReservationTFS().
   const [isLoading, setIsLoading] = useState(false);
   const [isReserved, setIsReserved] = useState(false);
 
   async function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
-    const reservationInfos = 
+    const reservationData = 
       {
         username: event.target.username.value,
         email: event.target.email.value,
         uid: user ? user.uid : null,
         ...searchParamsObj
       };
-    console.log(reservationInfos);
-    await addReservationToFirestore(reservationInfos);
+    console.log(reservationData);
+    // await addReservationTFS(reservationData);
+
+    // Determining whether uid is present, where adding reservation data to Firestore behaves differently.
+    if (reservationData.uid) {
+      await addRigisteredUserReservationTFS(reservationData);
+    } else {
+      await addUnrigisteredUserReservationTFS(reservationData);
+    }
     setIsReserved(true);
     setIsLoading(false);
   }
