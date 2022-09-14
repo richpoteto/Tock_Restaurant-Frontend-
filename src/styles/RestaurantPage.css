@@ -2,6 +2,8 @@
   width: 80%;
   max-width: 1280px;
   align-self: center;
+  /* minus header 100px and footer 60px  */
+  min-height: calc(100vh - 160px); 
 }
 
 .restaurant-page-main {

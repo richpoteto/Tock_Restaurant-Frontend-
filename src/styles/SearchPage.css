@@ -5,8 +5,8 @@
   flex-direction: column;
   align-items: center;
   background-color: var(--hover-white);
-  /* minus header 100px  */
-  min-height: calc(100vh - 100px); 
+  /* minus header 100px and footer 60px  */
+  min-height: calc(100vh - 160px); 
 }
 
 .filters-container {

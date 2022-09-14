@@ -1,0 +1,23 @@
+.footer {
+  height: 60px;
+  background-color: var(--footer-grey);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer p {
+  font-size: 1rem;
+  color: white;
+}
+
+.footer img {
+  height: 2rem;
+  filter: brightness(0) invert(1);
+}
+
+.footer img:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}

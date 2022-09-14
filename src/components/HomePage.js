@@ -13,7 +13,7 @@ function HomePage() {
         <SearchBar cuisineSelectOn={false} />
         <RestaurantShow />
       </div>
-      <AddRESTAURANTS />
+      {/* <AddRESTAURANTS /> */}
     </div>
   );
 }

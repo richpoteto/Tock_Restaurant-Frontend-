@@ -4,9 +4,9 @@
   display: flex;
   flex-direction: column;
   background-color: var(--hover-white);
-    /* minus header 100px and padding-bottom 64px */
-  min-height: calc(100vh - 164px); 
-  padding-bottom: 64px;
+  /* minus header 100px and footer 60px */
+  min-height: calc(100vh - 160px); 
+  /* padding-bottom: 64px; */
 }
 
 .profile-show-container {
@@ -101,6 +101,7 @@
   align-self: center;
   max-width: 1000px;
   width: 90%;
+  margin-bottom: 64px;
 }
 
 .reservations-show-header {

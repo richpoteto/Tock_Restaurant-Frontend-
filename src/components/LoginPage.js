@@ -253,7 +253,7 @@ function RedirectToHome() {
 
   return (
     <div className="redirect-to-home">
-      <p>You are signed in.</p>
+      <h3>You are signed in.</h3>
       <p>Redirecting to previous page ...</p>
       <button onClick={onClickPreviousPage}>Click here if not redirected</button>
       {/* <button onClick={signOutUser}>log out</button> */}

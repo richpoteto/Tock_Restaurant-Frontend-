@@ -1,6 +1,7 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import Footer from './components/Footer';
 import { Header, HeaderSimple } from './components/Header';
 import { auth } from './firebase/firebaseAuth';
 import { checkAddNewUserToFS } from './firebase/firestore';
@@ -33,6 +34,11 @@ function App({ simpleHeader, headerBoxShadow }) {
         <Header user={user} headerBoxShadow={headerBoxShadow} />
       }
       <Outlet context={user} />
+      { simpleHeader ?
+        null
+        :
+        <Footer />
+      }
     </div>
   );
 }
